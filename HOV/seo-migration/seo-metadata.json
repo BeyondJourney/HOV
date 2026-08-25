@@ -8,85 +8,85 @@
     {
         "Url":  "/about-company/",
         "Source":  "AUDIT-VERBATIM",
-        "Title":  "About us - House of Vacations",
-        "Description":  "At House of Vacations, we bring over two decades of expertise in curating exceptional travel experiences. Specializing in domestic and international group"
+        "Title":  "About us - House of Vacation",
+        "Description":  "At House of Vacation, we bring over two decades of expertise in curating exceptional travel experiences. Specializing in domestic and international group"
     },
     {
         "Url":  "/contact-us/",
         "Source":  "CREATED - audit value was junk (\"Phone Number:\", 13 chars)",
-        "Title":  "Contact us - House of Vacations",
-        "Description":  "Contact House of Vacations for corporate travel and MICE event planning across India. Call +91 9220470800 or email mice@houseofvacation.com for a quote."
+        "Title":  "Contact us - House of Vacation",
+        "Description":  "Contact House of Vacation for corporate travel and MICE event planning across India. Call +91 9220470800 or email mice@houseofvacation.com for a quote."
     },
     {
         "Url":  "/blog/",
         "Source":  "CREATED - audit had NO meta description",
-        "Title":  "Blog - House of Vacations",
-        "Description":  "Insights on MICE events, corporate travel and incentive programmes in India from the team at House of Vacations."
+        "Title":  "Blog - House of Vacation",
+        "Description":  "Insights on MICE events, corporate travel and incentive programmes in India from the team at House of Vacation."
     },
     {
         "Url":  "/our-services/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Our MICE \u0026 Corporate Travel Services | House of Vacations",
+        "Title":  "Our MICE \u0026 Corporate Travel Services | House of Vacation",
         "Description":  "End-to-end MICE services across India: meetings, incentives, conferences, exhibitions, offsites and corporate celebrations. Explore what we deliver."
     },
     {
         "Url":  "/corporate-travel/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Corporate Travel Management Services | House of Vacations",
+        "Title":  "Corporate Travel Management Services | House of Vacation",
         "Description":  "Corporate travel management for Indian businesses - policy-compliant bookings, cost control and 24x7 support. Plan smarter business travel with HOV."
     },
     {
         "Url":  "/corporate-travel-consultancy/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Corporate Travel Consultancy | House of Vacations",
+        "Title":  "Corporate Travel Consultancy | House of Vacation",
         "Description":  "Travel programme consultancy for corporates - policy design, vendor negotiation and spend analysis to reduce your organisation\u0027s travel costs."
     },
     {
         "Url":  "/mice-event/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "MICE Event Management Company in India | House of Vacations",
+        "Title":  "MICE Event Management Company in India | House of Vacation",
         "Description":  "Full-service MICE event management across India - venue sourcing, logistics, guest management and on-site execution for corporate events."
     },
     {
         "Url":  "/incentive/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Incentive Travel Programmes for Corporates | House of Vacations",
+        "Title":  "Incentive Travel Programmes for Corporates | House of Vacation",
         "Description":  "Reward top performers with incentive travel programmes designed and delivered end-to-end, both in India and internationally."
     },
     {
         "Url":  "/conferences-event/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Corporate Conference Management in India | House of Vacations",
+        "Title":  "Corporate Conference Management in India | House of Vacation",
         "Description":  "Conference and seminar management for corporates - venue selection, AV, delegate registration and full on-site coordination."
     },
     {
         "Url":  "/corporate-celebration/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Corporate Celebrations \u0026 Annual Day Events | House of Vacations",
+        "Title":  "Corporate Celebrations \u0026 Annual Day Events | House of Vacation",
         "Description":  "Annual days, award nights, family days and milestone celebrations planned and produced for corporate teams across India."
     },
     {
         "Url":  "/offsite-events/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Corporate Offsite Event Planning in India | House of Vacations",
+        "Title":  "Corporate Offsite Event Planning in India | House of Vacation",
         "Description":  "Team offsites and leadership retreats organised end-to-end - destination, stay, transport, activities and facilitation."
     },
     {
         "Url":  "/adventure-group/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Adventure Group Tours for Corporates | House of Vacations",
+        "Title":  "Adventure Group Tours for Corporates | House of Vacation",
         "Description":  "Adventure-led group experiences for corporate teams - trekking, water sports and outbound activities with full safety coordination."
     },
     {
         "Url":  "/customized-group/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Customised Group Tours for Corporates | House of Vacations",
+        "Title":  "Customised Group Tours for Corporates | House of Vacation",
         "Description":  "Tailor-made group travel for dealer groups, corporate cohorts and professional bodies, built around your objectives and budget."
     },
     {
         "Url":  "/destination-management/",
         "Source":  "CREATED - new page, no audit data",
-        "Title":  "Destination Management \u0026 Visa Assistance | House of Vacations",
+        "Title":  "Destination Management \u0026 Visa Assistance | House of Vacation",
         "Description":  "Destination management, visa and travel documentation support for corporate groups travelling within India and overseas."
     },
     {
@@ -105,7 +105,7 @@
         "Url":  "/mice-company-in-gurugram/",
         "Source":  "AUDIT-VERBATIM (pre-migration snapshot)",
         "Title":  "MICE Company in Gurugram| MICE Travel Agency in Gurugram",
-        "Description":  "Welcome to House of Vacations, your Trusted MICE Company in Gurugram, offering end-to-end solutions for corporate travel, events, and incentive tours | Contact us"
+        "Description":  "Welcome to House of Vacation, your Trusted MICE Company in Gurugram, offering end-to-end solutions for corporate travel, events, and incentive tours | Contact us"
     },
     {
         "Url":  "/corporate-travel-agency-in-mumbai/",
@@ -117,7 +117,7 @@
         "Url":  "/corporate-travel-agency-in-bangalore/",
         "Source":  "AUDIT-VERBATIM (pre-migration snapshot)",
         "Title":  "Corporate Travel Agency in Bangalore | MICE Company in Bangalore",
-        "Description":  "Leading Corporate Travel Agency in Bangalore for MICE \u0026amp; events. Travel smart, plan better—partner with House of Vacations today! | Contact us at +91 9220470800"
+        "Description":  "Leading Corporate Travel Agency in Bangalore for MICE \u0026amp; events. Travel smart, plan better—partner with House of Vacation today! | Contact us at +91 9220470800"
     },
     {
         "Url":  "/corporate-event-planners-in-pune/",

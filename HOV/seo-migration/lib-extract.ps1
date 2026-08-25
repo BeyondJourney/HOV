@@ -190,7 +190,7 @@ function Repair-Images {
                 $alt = ($alt -replace '\s+', ' ').Trim()
                 if ($alt.Length -gt 1) {
                     $alt = (Get-Culture).TextInfo.ToTitleCase($alt.ToLower())
-                    $safe = [System.Net.WebUtility]::HtmlEncode("$alt - House of Vacations")
+                    $safe = [System.Net.WebUtility]::HtmlEncode("$alt - House of Vacation")
                     $attrs = [regex]::Replace($attrs, '(?i)(?:^|\s)alt\s*=\s*"\s*"', " alt=""$safe""", 1)
                 }
             }
@@ -267,7 +267,7 @@ function Add-StructuredData {
   "@context": "https://schema.org",
   "@type": ["TravelAgency","Organization"],
   "@id": "https://houseofvacation.com/#organization",
-  "name": "House of Vacations India Pvt Ltd",
+  "name": "House of Vacation India Pvt Ltd",
   "alternateName": "HOV",
   "url": "https://houseofvacation.com/",
   "logo": "https://houseofvacation.com/assets/img/Logo-HOV.png",
@@ -440,11 +440,11 @@ function Remove-TemplateBranding {
     #>
     param([string]$Html)
 
-    $Html = [regex]::Replace($Html, '(?i)alt="Tourm[^"]*"', 'alt="House of Vacations"')
+    $Html = [regex]::Replace($Html, '(?i)alt="Tourm[^"]*"', 'alt="House of Vacation"')
     $Html = [regex]::Replace($Html, '(?i)<meta\s+name="author"\s+content="[^"]*"\s*/?>',
-                             '<meta name="author" content="House of Vacations">')
+                             '<meta name="author" content="House of Vacation">')
     $Html = [regex]::Replace($Html, '(?i)\s*<meta\s+name="keywords"\s+content="[^"]*"\s*/?>', '')
-    $Html = $Html -replace 'Tourm - Travel & Tour Booking Agency HTML Template', 'House of Vacations'
+    $Html = $Html -replace 'Tourm - Travel & Tour Booking Agency HTML Template', 'House of Vacation'
     return $Html
 }
 
@@ -528,7 +528,7 @@ function Set-SeoMeta {
     # --- Open Graph (kept consistent with title/description)
     $og = @"
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="House of Vacations">
+<meta property="og:site_name" content="House of Vacation">
 <meta property="og:url" content="$CanonicalUrl">
 <meta property="og:title" content="$encTitle">
 <meta property="og:description" content="$encDesc">
