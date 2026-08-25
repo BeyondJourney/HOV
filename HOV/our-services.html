@@ -715,23 +715,12 @@ Business travel, MICE, group tours, holidays, visa assistance, and personalized 
 }
 
 /* Button */
-/* Hide last 2 cards */
-.extra-wrapper{
-    display: none;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.extra-wrapper.show{
-    display: flex;
-}
-
-.extra-wrapper .service-card{
-    width: 300px;
-    max-width: 340px;
-}
+/* Cards 9 and 10 are hidden by .extra-card below and revealed by the View More
+   button. The .extra-wrapper rules that used to live here (display:flex,
+   gap:30px, and a 300-340px width on its cards) were removed along with the
+   wrapper itself: they gave the last two cards a different width and a
+   different gap from the eight above them, which is why the revealed row never
+   lined up with the grid. */
 
 /* View More button center */
 .view-more{
@@ -756,13 +745,44 @@ Business travel, MICE, group tours, holidays, visa assistance, and personalized 
 .view-more button:hover{
     background: #082567;
 }  
-/* Last 2 cards center */
+/* Last 2 cards center.
+
+   Eight cards fill two complete rows of the 4-column grid, so cards 9 and 10
+   land alone on row three. Grid has no "centre the short last row" behaviour,
+   so the row is centred by naming the tracks: card 9 into column 2 and card 10
+   into column 3 leaves one empty column either side.
+
+     [ 1 ][ 2 ][ 3 ][ 4 ]
+     [ 5 ][ 6 ][ 7 ][ 8 ]
+     [    ][ 9 ][ 10 ][    ]
+
+   These two rules predate the .extra-wrapper that was later put around the
+   cards; nth-child counts siblings, so once the cards were moved into their own
+   container they were children 1 and 2 and neither rule matched anything. With
+   the cards back in .service-wrapper they are children 9 and 10 again and the
+   rules do what they were written to do.
+
+   Placement is released below 992px. Ten cards divide exactly into a 2-column
+   grid (5 full rows) and a 1-column grid (10 rows), so the last row is already
+   complete; leaving `grid-column: 3 / 4` on card 10 would request a third
+   column that neither grid defines, the browser would add an implicit one, and
+   the card would sit outside the container behind a horizontal scrollbar.
+   The reset lives here, after the rules it overrides - a media query carries no
+   extra specificity, so placed with the grid-template-columns steps further up
+   the page it would have lost the cascade to these two rules. */
 .extra-card:nth-child(9){
     grid-column: 2 / 3;
 }
 
 .extra-card:nth-child(10){
     grid-column: 3 / 4;
+}
+
+@media(max-width:992px){
+    .extra-card:nth-child(9),
+    .extra-card:nth-child(10){
+        grid-column: auto;
+    }
 }
 
 /* Button full row me center */
@@ -772,17 +792,11 @@ Business travel, MICE, group tours, holidays, visa assistance, and personalized 
     justify-content: center;
     margin-top: 20px;
 }
-.extra-wrapper{
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    margin-top:30px;
-    flex-wrap:wrap;
-}
-
+/* No width here on purpose. The card is a grid item now, so it takes the same
+   1fr track as the eight above it; a fixed 320px would make the revealed row a
+   different size from the rest of the section. */
 .extra-card{
     display:none;
-    width:320px;
 }
 
 .extra-card.show{
@@ -1232,10 +1246,14 @@ body {
 
                     <h3>Corporate Travel Planning &amp; Management</h3>
 
+                    <!-- One sentence, not two points: it was split after
+                         "including flights," with the remainder starting
+                         lower-case, so it rendered as two bullets reading
+                         "...including flights," / "hotels, itineraries and
+                         logistics." Rejoined verbatim - no word changed. -->
                     <ul class="service-points">
-                            <li>End-to-end corporate travel planning including flights,</li>
-                            <li>hotels, itineraries and logistics.</li>
-                        </ul>
+                        <li>End-to-end corporate travel planning including flights, hotels, itineraries and logistics.</li>
+                    </ul>
 
                     <a href="corporate-travel.html">Explore Service <i class="fa-solid fa-arrow-right"></i></a>
 
@@ -1259,9 +1277,12 @@ body {
 
                     <h3>Incentive Trips &amp; Team Retreats Services </h3>
 
-                    <p>
-Employee reward travel Team retreats Motivation and engagement programs Customized itineraries
-                    </p>
+                    <ul class="service-points">
+                        <li>Employee reward travel</li>
+                        <li>Team retreats</li>
+                        <li>Motivation and engagement programs</li>
+                        <li>Customized itineraries</li>
+                    </ul>
 
                     <a href="incentive.html">Explore Service <i class="fa-solid fa-arrow-right"></i></a>
 
@@ -1281,9 +1302,13 @@ Employee reward travel Team retreats Motivation and engagement programs Customiz
 
                     <h3> Conference &amp; Event Travel Services</h3>
 
-                    <p>
-                        Delegate travel management Hotel accommodation Airport transfers On-ground coordination Business event logistics
-                    </p>
+                    <ul class="service-points">
+                        <li>Delegate travel management</li>
+                        <li>Hotel accommodation</li>
+                        <li>Airport transfers</li>
+                        <li>On-ground coordination</li>
+                        <li>Business event logistics</li>
+                    </ul>
 
                     <a href="conferences-event.html">Explore Service <i class="fa-solid fa-arrow-right"></i></a>
 
@@ -1425,11 +1450,19 @@ Employee reward travel Team retreats Motivation and engagement programs Customiz
 
                 </div>
             </div>
-            </div>
 
- <div class="extra-wrapper">
+            <!-- Cards 9 and 10 are children of .service-wrapper, not a second
+                 container. They used to sit in a separate .extra-wrapper flex
+                 row after the grid closed, which is what broke both the order
+                 and the alignment: they were laid out in their own formatting
+                 context at their own width (320px) and their own gap (30px),
+                 so they could never line up with the 1fr grid columns above.
+                 Back inside the grid they inherit the same track sizing and
+                 gap, and the existing .extra-card:nth-child(9)/(10) rules -
+                 which were written for exactly this and had been dead ever
+                 since the wrapper was introduced - centre the final row. -->
 
-    <!-- Card 9 -->
+            <!-- Card 9 -->
     <div class="service-card extra-card">
         <div class="service-img">
             <img loading="lazy" decoding="async" src="H/assets/img/services 9.jpg" alt="Services - House of Vacation" width="367" height="259">
@@ -1487,12 +1520,17 @@ Employee reward travel Team retreats Motivation and engagement programs Customiz
         </div>
     </div>
 
-</div>
+        </div><!-- /.service-wrapper -->
 
 <div class="view-more">
     <button id="viewBtn">View More</button>
 </div>
 
+    </div><!-- /.container - pre-existing: this was never closed, and the
+         browser was silently closing it here anyway when it reached
+         </section>. Closing it explicitly at the same spot keeps the button
+         inside the container exactly as it renders today, and makes the
+         section's markup balanced. -->
 </section>
 <style>
 /* =========================================================
