@@ -1,0 +1,153 @@
+# ============================================================================
+#  House of Vacation - SEO redirect layer
+#  Target: Apache 2.4 / LiteSpeed (current Hostinger server honours this file)
+#  Canonical host: https://houseofvacation.com  (non-www, HTTPS, trailing slash)
+#
+#  RULE ORDER IS DELIBERATE. Do not reorder - it is what prevents chains.
+#    1. Query-string cleanup      4. Explicit 1:1 redirects
+#    2. Canonical host + scheme   5. Pattern redirects
+#    3. Trailing slash            6. 404 fallback
+# ============================================================================
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# ---------------------------------------------------------------------------
+# 0. NEVER touch real files, assets, or the ACME challenge
+#    /wp-content/uploads/ MUST keep working - 30 live images depend on it.
+# ---------------------------------------------------------------------------
+RewriteRule ^\.well-known/ - [L]
+RewriteRule ^wp-content/uploads/ - [L]
+
+# ---------------------------------------------------------------------------
+# 1. Strip the ?no-cache= parameter trap
+#    The old site emitted infinite unique ?no-cache=<hex> URLs, all serving
+#    duplicate content at 200. Collapse them onto the clean URL.
+#    The trailing "?" in the target discards the original query string.
+# ---------------------------------------------------------------------------
+RewriteCond %{QUERY_STRING} (^|&)no-cache=[^&]* [NC]
+RewriteRule ^(.*)$ /$1? [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 2. Canonical host + scheme in a SINGLE 301 (no chain)
+#    X-Forwarded-Proto is checked because the site sits behind a CDN (hcdn).
+#    Without it, %{HTTPS} reads "off" at origin and you get a redirect loop.
+# ---------------------------------------------------------------------------
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ - [E=NEEDS_HTTPS:1]
+
+RewriteCond %{ENV:NEEDS_HTTPS} =1 [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://houseofvacation.com%{REQUEST_URI} [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 3. Force trailing slash on all page URLs
+#    EVERY canonical on this site uses a trailing slash. This is the single
+#    most likely thing to silently break during a rebuild.
+#    Skips: real files, real directories, and anything with a file extension.
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{2,5}$
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 4. Explicit 1:1 redirects  (old URL -> new URL)
+#    Add one line per changed URL. Always point at the FINAL destination,
+#    never at another redirect - that is how chains are avoided.
+# ---------------------------------------------------------------------------
+RewriteRule ^category/uncategorized/?$              /blog/  [R=301,L]
+RewriteRule ^hello-world/?$                         /blog/  [R=301,L]
+RewriteRule ^new-blog/?$                            /blog/  [R=301,L]
+RewriteRule ^index\.php$                            /       [R=301,L]
+
+# Sitemaps - old Rank Math structure onto the new single sitemap
+RewriteRule ^sitemap_index\.xml$                    /sitemap.xml [R=301,L]
+RewriteRule ^wp-sitemap\.xml$                       /sitemap.xml [R=301,L]
+RewriteRule ^(post|page|category)-sitemap\.xml$     /sitemap.xml [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 5. Pattern / folder / wildcard redirects
+# ---------------------------------------------------------------------------
+
+# Author archives (any author) -> blog
+RewriteRule ^author(/.*)?$                          /blog/  [R=301,L]
+
+# All feeds -> blog
+RewriteRule ^feed/?$                                /blog/  [R=301,L]
+RewriteRule ^comments/feed/?$                       /blog/  [R=301,L]
+RewriteRule ^.+/feed/?$                             /blog/  [R=301,L]
+
+# WordPress internals that will not exist in the new build
+RewriteRule ^wp-login\.php$                         /       [R=301,L]
+RewriteRule ^xmlrpc\.php$                           /       [R=301,L]
+RewriteRule ^wp-admin(/.*)?$                        /       [R=301,L]
+RewriteRule ^wp-json(/.*)?$                         /       [R=301,L]
+
+# Date archives  /2024/  /2025/  /2024/12/
+RewriteRule ^(19|20)[0-9]{2}(/[0-9]{2})?(/[0-9]{2})?/?$   /  [R=301,L]
+
+# Homepage pagination duplicates
+RewriteRule ^page/[0-9]+/?$                         /       [R=301,L]
+
+# Attachment pages  (?attachment_id=123)
+RewriteCond %{QUERY_STRING} (^|&)attachment_id=[0-9]+ [NC]
+RewriteRule ^(.*)$ /? [R=301,L]
+
+# FOLDER redirect example - whole tree moves, path preserved:
+#   /old-section/anything/  ->  /new-section/anything/
+# RewriteRule ^old-section/(.*)$   /new-section/$1  [R=301,L]
+
+# WILDCARD example - collapse an entire tree onto one page:
+# RewriteRule ^destinations/(.*)$  /destinations/    [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 6. Front controller / 404 fallback
+#    PHP or static build: send unmatched requests to the app router, which
+#    decides between a real 404 and a smart redirect (see 05_fallback logic).
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Custom error document - only reached if index.php is absent.
+# NOTE: this returns a real 404 status. See README section on soft-404 risk
+#       before switching this to a redirect.
+# ---------------------------------------------------------------------------
+ErrorDocument 404 /page-not-found/
+
+# ---------------------------------------------------------------------------
+# Caching - the old server sent Cache-Control: no-store on HTML, which is what
+# produced the ?no-cache= URLs. Do not repeat that.
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Do NOT re-add: Cache-Control "no-store" on text/html
+</IfModule>

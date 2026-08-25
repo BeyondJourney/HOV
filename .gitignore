@@ -1,0 +1,56 @@
+# House of Vacation — ignore rules
+#
+# Scope note: this file is deliberately conservative. The website itself is
+# static HTML/CSS/JS plus image, video and font assets, and ALL of it is meant
+# to be tracked. Nothing below matches any website file or asset.
+#
+# Not ignored on purpose:
+#   HOV/seo-migration/_deploy/      build output, kept by explicit decision
+#   HOV/seo-migration/_backup_*/    dated backups, kept by explicit decision
+#   HOV/seo-audit-export/           SEO audit CSVs
+# These are already committed. If you later want them out of the repo, they
+# have to be untracked as well as ignored (git rm -r --cached <path>).
+
+# ---- Secrets and local configuration -------------------------------------
+# Never commit credentials. mail.php currently hard-codes nothing, so if SMTP
+# details are ever moved into a file, put them in one of these.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+
+# ---- Dependency directories ----------------------------------------------
+# Not present today; here so a future build step cannot commit one by accident.
+node_modules/
+vendor/composer/
+bower_components/
+
+# ---- Logs and temporary files --------------------------------------------
+*.log
+npm-debug.log*
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# ---- OS cruft -------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ---- Editor / IDE ---------------------------------------------------------
+.idea/
+*.sublime-workspace
+*.code-workspace

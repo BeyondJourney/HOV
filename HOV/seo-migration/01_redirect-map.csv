@@ -1,0 +1,35 @@
+OldUrl,NewUrl,Type,StatusCode,Reason
+/,/,KEEP,200,P0 homepage - slug must not change
+/mice-company-in-delhi/,/mice-company-in-delhi/,KEEP,200,P0 ranking page - 1047 words
+/mice-company-in-noida/,/mice-company-in-noida/,KEEP,200,P0 ranking page - 1031 words
+/mice-company-in-gurugram/,/mice-company-in-gurugram/,KEEP,200,P0 ranking page - 1229 words
+/corporate-travel-agency-in-mumbai/,/corporate-travel-agency-in-mumbai/,KEEP,200,P0 ranking page - 1301 words
+/corporate-travel-agency-in-bangalore/,/corporate-travel-agency-in-bangalore/,KEEP,200,P0 ranking page - 1244 words
+/corporate-event-planners-in-pune/,/corporate-event-planners-in-pune/,KEEP,200,P0 ranking page - 1030 words
+/contact-us/,/contact-us/,KEEP,200,P0 conversion page - holds NAP
+/about-company/,/about-company/,KEEP,200,P1 - 30 inbound links
+/blog/,/blog/,KEEP,200,P1 blog index - 30 inbound links
+/category/uncategorized/,/blog/,REDIRECT,301,Default WP category - no equivalent in new build
+/hello-world/,/blog/,REDIRECT,301,WordPress default sample post
+/new-blog/,/blog/,REDIRECT,301,Placeholder post - body is Test blog pag e
+/author/essenceofnature43gmail-com/,/blog/,REDIRECT,301,Author archive - already noindex
+/feed/,/blog/,REDIRECT,301,WP RSS feed
+/blog/feed/,/blog/,REDIRECT,301,WP RSS feed
+/comments/feed/,/blog/,REDIRECT,301,WP comments feed
+/category/uncategorized/feed/,/blog/,REDIRECT,301,WP category feed
+/index.php,/,REDIRECT,301,WP front controller
+/wp-login.php,/,REDIRECT,301,WordPress login - will not exist
+/xmlrpc.php,/,REDIRECT,301,WordPress XML-RPC - will not exist
+/wp-admin/,/,REDIRECT,301,WordPress admin - will not exist
+/wp-json/,/,REDIRECT,301,WordPress REST API - will not exist
+/sitemap_index.xml,/sitemap.xml,REDIRECT,301,Rank Math sitemap index to new sitemap
+/sitemap.xml,/sitemap.xml,KEEP,200,New sitemap location
+/wp-sitemap.xml,/sitemap.xml,REDIRECT,301,WP core sitemap to new sitemap
+/post-sitemap.xml,/sitemap.xml,REDIRECT,301,Rank Math child sitemap
+/page-sitemap.xml,/sitemap.xml,REDIRECT,301,Rank Math child sitemap
+/category-sitemap.xml,/sitemap.xml,REDIRECT,301,Rank Math child sitemap
+/page/2/,/,REDIRECT,301,Homepage pagination duplicate
+/page/3/,/,REDIRECT,301,Homepage pagination duplicate
+/2024/,/,REDIRECT,301,Year archive
+/2025/,/,REDIRECT,301,Year archive
+/wp-content/uploads/*,/wp-content/uploads/*,KEEP,200,CRITICAL - 30 live images. Serve from identical path in new build

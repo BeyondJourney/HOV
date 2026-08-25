@@ -1,0 +1,1877 @@
+/* ==========================================================================
+   House of Vacation — site-wide margin & typography normalisation
+   --------------------------------------------------------------------------
+   Loaded LAST in <head>, after style.css.
+
+   Why !important is used here:
+   most pages carry hand-written <style> blocks inside <body>. Those come after
+   the <head> in document order, so an ordinary rule in this file would lose to
+   them. Selectors here are therefore prefixed with `body ` (raising
+   specificity) and the normalised properties are marked !important so the one
+   shared scale always wins, whichever page it is on.
+
+   Only spacing / typography properties are touched. Layout properties the page
+   styles rely on (display, grid-template-columns, flex, gap …) are never
+   overridden.
+   ========================================================================== */
+
+:root {
+    /* ---- Horizontal rhythm ----------------------------------------------
+       --hov-container is the content width, edge to edge.
+       --hov-gutter is the space kept between content and the screen edge.  */
+    --hov-container: 1250px;
+    --hov-gutter: 24px;
+
+    /* ---- Vertical rhythm ------------------------------------------------ */
+    --hov-section-space: 50px;
+    --hov-section-space-mobile: 35px;
+    --hov-block-space: 45px;
+
+    /* ---- Type scale ----------------------------------------------------- */
+    --hov-fs-banner: clamp(30px, 4.6vw, 48px);
+    --hov-fs-h1: clamp(28px, 4.2vw, 42px);
+    --hov-fs-h2: clamp(26px, 3.2vw, 36px);
+    --hov-fs-h3: clamp(22px, 2.4vw, 28px);
+    --hov-fs-h4: clamp(19px, 1.9vw, 22px);
+    --hov-fs-h5: 22px;
+    --hov-fs-h6: 18px;
+    --hov-fs-lead: 18px;
+    --hov-fs-body: 16px;
+    --hov-fs-small: 14px;
+
+    --hov-lh-heading: 1.3;
+    --hov-lh-body: 1.8;
+
+    /* ---- Colour --------------------------------------------------------- */
+    --hov-heading-color: #082567;
+    --hov-body-color: #555555;
+
+    /* ---- Re-point the template's own tokens at the same values ---------- *
+     * The template shipped with "Franklin Gothic Medium", which is not a web
+     * font: it only resolves on Windows machines that happen to have it, and
+     * falls back to a generic sans-serif everywhere else. Every hand-written
+     * section on this site asks for Poppins, so Poppins becomes the single
+     * family for the whole site.                                            */
+    --title-font: "Poppins", sans-serif;
+    --body-font: "Poppins", sans-serif;
+    --style-font: "Poppins", sans-serif;
+    --title-color: var(--hov-heading-color);
+    --body-color: var(--hov-body-color);
+}
+
+
+/* ==========================================================================
+   1. CONTAINERS — one shared left/right edge for every section
+   --------------------------------------------------------------------------
+   Before this, wrappers were declared at 90% / 95% / 96% of the viewport and
+   capped at 1100 / 1150 / 1200 / 1250 / 1280 / 1300 / 1340 / 1400px depending
+   on which section you were looking at, while the template's own .container
+   stepped through Bootstrap's 540/720/960/1140/1250px breakpoints. Section
+   edges therefore jogged left and right as you scrolled the page.
+
+   Everything below now resolves to the same fluid container.
+   .th-container (the deliberately full-width header) is excluded.
+   ========================================================================== */
+
+body .container:not(.th-container),
+body .footer-container,
+body .hov-container,
+body .service-detail .container,
+body .service-heading .container,
+body .hov-travel-service .container,
+body .why-us .container,
+body .contact-section .container,
+body .mice-cards-grid-container {
+    width: 100% !important;
+    max-width: calc(var(--hov-container) + (var(--hov-gutter) * 2)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: var(--hov-gutter) !important;
+    padding-right: var(--hov-gutter) !important;
+}
+
+/* Bootstrap 5 rows already carry their own -12px side margins and columns
+   their own +12px padding, so a .row child and a plain child of the container
+   both land on the same 24px edge. Nothing further to correct here. */
+
+
+/* ==========================================================================
+   2. BASE TYPOGRAPHY — one scale for template and hand-written sections alike
+   --------------------------------------------------------------------------
+   The template's headings were h1 50 / h2 45 / h3 40 / h4 35 / h5 30 / h6 25,
+   while the hand-written sections used h2 30–48 / h3 32 / h4 22. A template
+   section and a custom section sitting next to each other showed the same
+   heading level at very different sizes.
+   ========================================================================== */
+
+body {
+    font-family: var(--body-font);
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body .h1,
+body .h2,
+body .h3,
+body .h4,
+body .h5,
+body .h6 {
+    font-family: var(--title-font);
+    line-height: var(--hov-lh-heading);
+}
+
+body h1,
+body .h1 {
+    font-size: var(--hov-fs-h1);
+}
+
+body h2,
+body .h2 {
+    font-size: var(--hov-fs-h2);
+    /* style.css also carried a stray global `h2 { color:#00008b }`, a third
+       heading blue on top of #113D48 and #082567. */
+    color: var(--hov-heading-color);
+}
+
+body h3,
+body .h3 {
+    font-size: var(--hov-fs-h3);
+}
+
+body h4,
+body .h4 {
+    font-size: var(--hov-fs-h4);
+}
+
+body h5,
+body .h5 {
+    font-size: var(--hov-fs-h5);
+}
+
+body h6,
+body .h6 {
+    font-size: var(--hov-fs-h6);
+}
+
+/* Headings placed on dark artwork must keep winning. */
+body .text-white,
+body .text-white h1,
+body .text-white h2,
+body .text-white h3,
+body .text-white h4,
+body .text-white h5,
+body .text-white h6 {
+    color: #fff;
+}
+
+body .sec-text {
+    font-size: var(--hov-fs-lead);
+    line-height: var(--hov-lh-body);
+}
+
+
+/* ==========================================================================
+   3. PAGE BANNER — same height, same alignment, same title on every page
+   --------------------------------------------------------------------------
+   about / blog / our services centred the banner text at 900px in Poppins 56px;
+   the ten service pages left them flush-left in the template's 54px Franklin
+   Gothic. Same element, two different treatments.
+   ========================================================================== */
+
+body .breadcumb-wrapper {
+    height: auto !important;
+    min-height: 450px !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Each page painted its own scrim at rgba(0,0,0,.35), which is not enough for
+   white type over a sunset or a bright sky — the banner headings on the service
+   pages were close to unreadable. One gradient now covers every banner, darker
+   through the middle band where the text actually sits. */
+body .breadcumb-wrapper::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+            rgba(4, 18, 44, .55) 0%,
+            rgba(4, 18, 44, .70) 45%,
+            rgba(4, 18, 44, .62) 100%) !important;
+}
+
+body .breadcumb-wrapper > * {
+    position: relative;
+    z-index: 2;
+}
+
+body .breadcumb-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+}
+
+body .breadcumb-title {
+    font-family: var(--title-font) !important;
+    font-size: var(--hov-fs-banner) !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.5px;
+    color: #fff !important;
+    margin: 0 0 20px 0 !important;
+}
+
+body .banner-subtitle {
+    max-width: 720px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-family: var(--body-font) !important;
+    font-size: var(--hov-fs-lead) !important;
+    font-weight: 400 !important;
+    line-height: var(--hov-lh-body) !important;
+    /* Several pages set this to a mid grey, which disappeared against the
+       darkened banner artwork. */
+    color: rgba(255, 255, 255, .92) !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, .45);
+}
+
+body .breadcumb-title {
+    text-shadow: 0 3px 18px rgba(0, 0, 0, .4);
+}
+
+body .breadcumb-menu li,
+body .breadcumb-menu span {
+    color: rgba(255, 255, 255, .85) !important;
+}
+
+body .breadcumb-menu a {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+body .breadcumb-menu a:hover {
+    color: #1abbec !important;
+}
+
+body .breadcumb-menu {
+    justify-content: center;
+    margin-top: 20px !important;
+}
+
+body .breadcumb-menu li,
+body .breadcumb-menu a,
+body .breadcumb-menu span {
+    font-size: var(--hov-fs-lead) !important;
+    line-height: var(--hov-lh-body);
+}
+
+/* Home page hero — was 58px / 20px against the banner's 54–56px / 22px. */
+body .hero-style5 .hero-title {
+    font-size: var(--hov-fs-banner) !important;
+    line-height: 1.15 !important;
+}
+
+body .hero-style5 .hero-text {
+    font-size: var(--hov-fs-lead) !important;
+    line-height: var(--hov-lh-body) !important;
+}
+
+
+/* ==========================================================================
+   4. HAND-WRITTEN CONTENT SECTIONS
+   --------------------------------------------------------------------------
+   Section padding ran 15 / 25 / 35 / 40 / 80 / 90px, so the gap between two
+   stacked sections depended on which two they were. Body copy ran 15/16/17/18px
+   at line-height 1.8 / 1.9 / 2.0 in #333 / #555 / #666 / #5F6368, and headings
+   in #082567 / #02226d / #163B5B / #023566 / #111 / #000.
+   ========================================================================== */
+
+body .service-detail,
+body .service-section,
+body .hov-travel-service,
+body .hov-content {
+    padding-top: var(--hov-section-space) !important;
+    padding-bottom: var(--hov-section-space) !important;
+    font-family: var(--body-font) !important;
+}
+
+/* ---- Headings -------------------------------------------------------- */
+body .service-heading h2,
+body .hov-travel-service h2,
+body .hov-block h2 {
+    font-size: var(--hov-fs-h2) !important;
+    font-weight: 700 !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 20px 0 !important;
+}
+
+body .content-left h3 {
+    font-size: var(--hov-fs-h3) !important;
+    font-weight: 700 !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 20px 0 !important;
+}
+
+body .hov-travel-service h4,
+body .hov-block h4 {
+    font-size: var(--hov-fs-h4) !important;
+    font-weight: 600 !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 30px 0 16px 0 !important;
+}
+
+/* ---- Body copy ------------------------------------------------------- */
+body .service-heading p,
+body .content-left p,
+body .hov-travel-service p,
+body .hov-block p,
+body .service-list li,
+body .hov-list li {
+    font-family: var(--body-font) !important;
+    font-size: var(--hov-fs-body) !important;
+    font-weight: 400 !important;
+    line-height: var(--hov-lh-body) !important;
+    color: var(--hov-body-color) !important;
+    letter-spacing: normal !important;
+}
+
+body .service-heading p,
+body .content-left p,
+body .hov-travel-service p,
+body .hov-block p {
+    margin: 0 0 18px 0 !important;
+    text-align: left !important;
+}
+
+body .service-list li,
+body .hov-list li {
+    margin-bottom: 8px !important;
+}
+
+/* The intro paragraph was capped at 1200px inside a 1280px container, so its
+   text edge sat 40px inside the heading above it. It now shares the container
+   edge; only the heading stays centred. */
+body .service-heading {
+    text-align: center;
+    margin-bottom: 40px !important;
+}
+
+body .service-heading p {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body .hov-block {
+    margin-bottom: var(--hov-block-space) !important;
+}
+
+body .hov-block:last-child {
+    margin-bottom: 0 !important;
+}
+
+
+/* ==========================================================================
+   5. FOOTER
+   ========================================================================== */
+
+body .hov-footer {
+    font-family: var(--body-font) !important;
+    padding-top: var(--hov-section-space) !important;
+}
+
+body .footer-box h3 {
+    font-size: var(--hov-fs-h4) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: #fff !important;
+    margin-bottom: 25px !important;
+}
+
+body .footer-box p,
+body .footer-box ul li,
+body .footer-box ul li a,
+body .contact-item p,
+body .contact-item a {
+    font-size: var(--hov-fs-body) !important;
+    line-height: var(--hov-lh-body) !important;
+}
+
+body .footer-bottom p {
+    font-size: var(--hov-fs-body) !important;
+    line-height: var(--hov-lh-body) !important;
+}
+
+
+/* ==========================================================================
+   6. COMPONENTS THAT HAD ACCUMULATED CONTRADICTORY DECLARATIONS
+   --------------------------------------------------------------------------
+   Repeated editing left several selectors declared over and over at the same
+   specificity, so only the last one ever applied and the rest were dead:
+
+     our services.html  .service-content h3   7 sizes  30/22/20/18/20/22/24px
+     our services.html  .service-content p    7 sizes  17/17/14/13/15/16/17px
+     our services.html  .service-content a    8 sizes  14/13/12/12/12/11/14/15px
+     our services.html  .tag                  5 sizes  13/11/10/11/12px
+     about.html         .section-title h2     2 base sizes 52px then 42px
+     contact.html       .contact-left h2      2 base sizes 56px then 42px
+
+   Each is pinned once here, on the shared scale. The old declarations are left
+   in place but are now outranked, so nothing else on those pages shifts.
+   ========================================================================== */
+
+/* Section titles written with the template's own classes. */
+body .sec-title,
+body .section-title h2,
+body .contact-left h2 {
+    font-size: var(--hov-fs-h2) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin-bottom: 20px !important;
+}
+
+body .contact-left p {
+    font-size: var(--hov-fs-body) !important;
+    line-height: var(--hov-lh-body) !important;
+    color: var(--hov-body-color) !important;
+}
+
+/* Service cards. Scoped to .service-card so the two-column .service-content
+   block on the service-detail pages keeps its own heading size. */
+body .service-card .service-content h3 {
+    font-size: var(--hov-fs-h4) !important;
+    font-weight: 700 !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 12px 0 !important;
+}
+
+body .service-card .service-content p {
+    font-size: var(--hov-fs-body) !important;
+    font-weight: 400 !important;
+    line-height: var(--hov-lh-body) !important;
+    color: var(--hov-body-color) !important;
+    margin: 0 0 18px 0 !important;
+}
+
+body .service-card .service-content a,
+body .service-card .tag {
+    font-size: var(--hov-fs-small) !important;
+    line-height: 1.4 !important;
+}
+
+body .service-card .service-content a i {
+    font-size: var(--hov-fs-small) !important;
+}
+
+/* The "MICE services" block on the home page carried a parallel type system of
+   its own — rem-based sizes (2.2 / 1.25 / 1.05 / 0.92rem) and its own greys and
+   blues (#00008b, #1e293b, #475569, #64748b) — declared twice over in
+   style.css. It now reads on the same scale as every other section. */
+body .mice-main-title {
+    font-size: var(--hov-fs-h2) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+}
+
+body .mice-sub-text {
+    font-size: var(--hov-fs-lead) !important;
+    line-height: var(--hov-lh-body) !important;
+    color: var(--hov-body-color) !important;
+}
+
+body .mice-card-content-box h3 {
+    font-size: var(--hov-fs-h4) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+}
+
+body .mice-card-content-box p {
+    font-size: var(--hov-fs-body) !important;
+    line-height: var(--hov-lh-body) !important;
+    color: var(--hov-body-color) !important;
+}
+
+
+/* ==========================================================================
+   7. THE REMAINING TYPEFACES
+   --------------------------------------------------------------------------
+   Beyond Franklin Gothic, three more families had crept in: two competing
+   `body { font-family: … }` rules appended to style.css asking for 'Inter' and
+   'Plus Jakarta Sans' (never loaded, so it fell back to a system sans), and
+   `.mice-services-section { font-family: Arial !important }`, which is why the
+   home page's service cards rendered in Arial while the rest of the page was
+   in Poppins.
+   ========================================================================== */
+
+body .mice-services-section,
+body .mice-services-section * {
+    font-family: var(--body-font) !important;
+}
+
+/* The eyebrow above each section title was 30px in the template's decorative
+   font — bigger than some of the headings it was introducing. It now reads as
+   a label rather than competing with the title below it. */
+body .sub-title {
+    font-family: var(--body-font) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: var(--theme-color) !important;
+    margin-bottom: 14px !important;
+}
+
+/* .box-title was declared twice — 24px in the template, then 30px in
+   #0A3F5F further down style.css, a fifth heading blue. */
+body .box-title {
+    font-size: var(--hov-fs-h5) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+}
+
+
+/* ==========================================================================
+   8. SECTIONS WHERE A COLUMN RAN PAST ITS IMAGE
+   ========================================================================== */
+
+/* "Creating Meaningful Corporate Experiences Worldwide" — the photo was 582px
+   tall against an 885px text column, leaving 300px of empty background beneath
+   it. The image now fills its column so both sides finish together. */
+body #about-sec .row {
+    align-items: stretch;
+}
+
+body #about-sec .img-box4,
+body #about-sec .img-box4 .img1 {
+    height: 100%;
+}
+
+body #about-sec .img-box4 .img1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+}
+
+/* "How We Manage Pan-India MICE Projects Efficiently" — a 1.17:1 group photo
+   against an 812px text column. Filling it the way the about section does
+   would crop to 0.62:1 and cut half the group out of frame, so the photo keeps
+   its shape and is centred instead, which splits the leftover space evenly
+   above and below rather than dumping it all at one end. The template also
+   pulled it 170px below its own column, which is what pushed it out of
+   alignment with the text in the first place. */
+body .cta-sec5 .row {
+    align-items: center !important;
+}
+
+body .cta-sec5 .app-mockup {
+    margin-bottom: 0 !important;
+}
+
+body .cta-sec5 .app-mockup img {
+    width: 100%;
+    border-radius: 24px;
+}
+
+body .cta-sec5 .app-mockup:before {
+    display: none;
+}
+
+/* The stat circles were staggered 158px apart, which read as a misalignment
+   rather than as a motif and left the section mostly empty. */
+body .counter-sec2 .counter-card,
+body .counter-sec2 .counter-card-wrap:nth-child(even) .counter-card {
+    margin-top: 0 !important;
+}
+
+body .counter-sec2 .counter-card-wrap {
+    margin: 25px 0 !important;
+}
+
+/* Service cards: centred body copy over three or four lines reads ragged, and
+   the titles were centred against left-aligned artwork. */
+body .mice-grid-card,
+body .mice-card-content-box {
+    text-align: left !important;
+}
+
+
+/* ==========================================================================
+   9. RESPONSIVE
+   --------------------------------------------------------------------------
+   The type scale is clamp()-based, so it resolves itself. Only the gutter and
+   the vertical rhythm need stepping down.
+   ========================================================================== */
+
+@media (max-width: 575.98px) {
+    :root {
+        --hov-gutter: 16px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    :root {
+        --hov-section-space: var(--hov-section-space-mobile);
+        --hov-block-space: 32px;
+    }
+
+    body .breadcumb-wrapper {
+        min-height: 340px !important;
+    }
+}
+
+
+/* ==========================================================================
+   10. ENTRANCE ANIMATIONS — content must never be left permanently invisible
+   --------------------------------------------------------------------------
+   style.css declares every animated element as
+
+       .slideinleft, .slideinup, … { opacity: 0; animation-name: var(--animation-name) }
+
+   and then names the animation in exactly one place:
+
+       .swiper-slide-active .slideinleft { --animation-name: slideinleft }
+
+   So an element only ever becomes visible if a slider marks its slide active.
+   On the home page the hero runs in fade mode, where the slide Swiper marks
+   active is not the one being painted — the painted slide therefore kept
+   `opacity: 0` and the hero rendered as a bare background image with no
+   heading, no copy, no buttons and no photos.
+
+   Two changes make the content self-healing:
+
+     1. the animation is named on the base class, so it plays whether or not a
+        slider is involved;
+     2. the resting opacity is 1 and the fill mode is `both`, so the 0% keyframe
+        supplies the invisible start during the delay and the 100% keyframe the
+        visible end — and if the animation never runs at all (JS blocked, class
+        never added, animation interrupted) the element is simply visible.
+
+   The `.swiper-slide-active` rules still apply and still set the same value, so
+   slider-driven timing is unchanged.
+   ========================================================================== */
+
+body .fadein,
+body .scalein,
+body .slidetopleft,
+body .slidebottomright,
+body .slideinleft,
+body .slideinright,
+body .slideindown,
+body .slideinup,
+body .rollinleft,
+body .rollinright {
+    opacity: 1;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+body .fadein {
+    --animation-name: fadein;
+}
+
+body .scalein {
+    --animation-name: scalein;
+}
+
+body .slidetopleft {
+    --animation-name: slidetopleft;
+}
+
+body .slidebottomright {
+    --animation-name: slidebottomright;
+}
+
+body .slideinleft {
+    --animation-name: slideinleft;
+}
+
+body .slideinright {
+    --animation-name: slideinright;
+}
+
+body .slideindown {
+    --animation-name: slideindown;
+}
+
+body .slideinup {
+    --animation-name: slideinup;
+}
+
+body .rollinleft {
+    --animation-name: rollinleft;
+}
+
+body .rollinright {
+    --animation-name: rollinright;
+}
+
+/* Visitors who ask their OS for reduced motion get the content, not the
+   movement — and, critically, never an element stuck at opacity 0. */
+@media (prefers-reduced-motion: reduce) {
+
+    body *,
+    body *::before,
+    body *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    body .fadein,
+    body .scalein,
+    body .slidetopleft,
+    body .slidebottomright,
+    body .slideinleft,
+    body .slideinright,
+    body .slideindown,
+    body .slideinup,
+    body .rollinleft,
+    body .rollinright {
+        opacity: 1 !important;
+    }
+}
+
+
+/* ==========================================================================
+   11. FOCUS VISIBILITY
+   --------------------------------------------------------------------------
+   The theme removes the outline on inputs and never replaces it, so a keyboard
+   user had no way to tell where they were on the page.
+   ========================================================================== */
+
+body a:focus-visible,
+body button:focus-visible,
+body input:focus-visible,
+body select:focus-visible,
+body textarea:focus-visible,
+body [tabindex]:focus-visible {
+    outline: 3px solid #1abbec;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Skip link — hidden until focused. */
+.hov-skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 99999;
+    padding: 12px 20px;
+    background: var(--hov-heading-color);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 6px 0;
+}
+
+.hov-skip:focus {
+    left: 0;
+}
+
+
+/* ==========================================================================
+   12. BUTTON CONSISTENCY
+   --------------------------------------------------------------------------
+   .th-btn shipped with different radii and no disabled/active feedback, and
+   nothing on the site indicated a button was busy while a form was posting.
+   ========================================================================== */
+
+body .th-btn {
+    transition: background-color .28s ease, color .28s ease,
+        box-shadow .28s ease, transform .18s ease;
+}
+
+body .th-btn:hover,
+body .th-btn:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -12px rgba(8, 37, 103, .55);
+}
+
+body .th-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+body .th-btn[disabled],
+body .th-btn.is-sending,
+body button[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* ==========================================================================
+   13. FORMS
+   --------------------------------------------------------------------------
+   Shared field styling so the enquiry form reads as one component, plus the
+   invalid state the JS toggles and the honeypot the spam trap needs.
+   ========================================================================== */
+
+body .hov-hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* The contact row is a flex container with `gap: 60px`, but the two columns
+   were given `flex: 0 0 45%` and `flex: 0 0 55%`. 45 + 55 = 100% of the
+   container, so the gap pushed the form 60px past the right edge - visible from
+   about 1200px down to the 992px breakpoint, where the enquiry panel was
+   clipped. Flex ratios let the gap come out of the available space instead. */
+@media (min-width: 992px) {
+
+    body .contact-section .contact-left {
+        flex: 45 1 0 !important;
+        width: auto !important;
+        min-width: 0;
+    }
+
+    body .contact-section .contact-form {
+        flex: 55 1 0 !important;
+        width: auto !important;
+        min-width: 0;
+    }
+}
+
+body .contact-form input,
+body .contact-form select,
+body .contact-form textarea {
+    border-radius: 8px;
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+body .contact-form input:focus,
+body .contact-form select:focus,
+body .contact-form textarea:focus {
+    border-color: #1abbec;
+    box-shadow: 0 0 0 3px rgba(26, 187, 236, .18);
+}
+
+body .contact-form .is-invalid,
+body form .is-invalid {
+    border-color: #d64545 !important;
+    box-shadow: 0 0 0 3px rgba(214, 69, 69, .15);
+}
+
+body .form-messages {
+    grid-column: 1 / -1;
+    margin: 14px 0 0;
+    font-size: var(--hov-fs-small);
+    line-height: 1.6;
+    min-height: 1.2em;
+}
+
+body .form-messages.success {
+    color: #1f7a4d;
+}
+
+body .form-messages.error {
+    color: #a2382c;
+}
+
+/* The enquiry form's submit button was the only black button on the site, and
+   its hover state (near-white fill on a white panel) made it disappear under
+   the pointer. It now matches .th-btn like every other button. */
+body .submit-btn {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 18px;
+}
+
+body .submit-btn button {
+    background: var(--hov-heading-color);
+    color: #fff;
+    border: 1px solid var(--hov-heading-color);
+    border-radius: 30px;
+    padding: 16px 46px;
+    font-family: var(--body-font);
+    font-size: var(--hov-fs-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .28s ease, color .28s ease,
+        box-shadow .28s ease, transform .18s ease;
+}
+
+body .submit-btn button:hover,
+body .submit-btn button:focus-visible {
+    background: #1abbec;
+    border-color: #1abbec;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -12px rgba(8, 37, 103, .55);
+}
+
+body .submit-btn button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Native selects render their own arrow; the theme also paints one, so the
+   arrow appeared twice on the enquiry form. */
+body .contact-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px;
+    padding-right: 42px;
+}
+
+
+/* ==========================================================================
+   14. IMAGES
+   --------------------------------------------------------------------------
+   Nothing constrained image width, so any image wider than its column pushed
+   the page sideways.
+   ========================================================================== */
+
+body img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Images given explicit width/height for CLS must still scale down. */
+body .footer-logo,
+body .mice-card-img,
+body .service-img img,
+body .gallery-item img {
+    max-width: 100%;
+}
+
+
+/* ==========================================================================
+   15. FOOTER
+   --------------------------------------------------------------------------
+   .footer-bottom p was absolutely positioned at left:50% with the accreditation
+   logos floated right in the same row. Below roughly 900px the two overlapped.
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+
+    body .footer-bottom {
+        padding: 20px 16px;
+    }
+
+    body .footer-bottom-content {
+        flex-direction: column-reverse;
+        gap: 18px;
+        justify-content: center;
+        min-height: 0;
+    }
+
+    body .footer-bottom p {
+        position: static;
+        left: auto;
+        transform: none;
+        width: auto;
+        text-align: center;
+    }
+
+    body .footer-right-logos {
+        justify-content: center;
+        gap: 24px;
+    }
+
+    body .footer-right-logos img {
+        height: 56px;
+    }
+}
+
+/* The footer links had no visible focus target and shifted 8px on hover, which
+   nudged every link below them. Colour alone now carries the hover. */
+body .footer-box ul li a {
+    display: inline-block;
+    position: relative;
+}
+
+body .footer-box ul li a:hover {
+    padding-left: 0;
+    color: #1abbec;
+}
+
+body .footer-box ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 1px;
+    background: #1abbec;
+    transition: width .28s ease;
+}
+
+body .footer-box ul li a:hover::after,
+body .footer-box ul li a:focus-visible::after {
+    width: 100%;
+}
+
+
+/* ==========================================================================
+   16. BACK TO TOP
+   --------------------------------------------------------------------------
+   The theme ships the styles and the scroll behaviour for .scroll-top but no
+   page included the control. These pages run to 8,000px+, so it earns its place.
+   ========================================================================== */
+
+body .scroll-top {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 90;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--hov-heading-color);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity .3s ease, visibility .3s ease, transform .3s ease, background-color .3s ease;
+    box-shadow: 0 10px 26px -12px rgba(8, 37, 103, .7);
+}
+
+body .scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+body .scroll-top:hover {
+    background: #1abbec;
+}
+
+body .scroll-top::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    margin-top: -2px;
+    border-left: 2px solid #fff;
+    border-top: 2px solid #fff;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+body .scroll-top svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body .scroll-top svg path {
+    fill: none;
+    stroke: #1abbec;
+    stroke-width: 4;
+}
+
+@media (max-width: 575.98px) {
+    body .scroll-top {
+        right: 14px;
+        bottom: 14px;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+
+/* ==========================================================================
+   17. GALLERY
+   --------------------------------------------------------------------------
+   .gallery-item carried cursor:pointer and a hover zoom but had no click
+   behaviour, so the affordance was false. main.js now opens the lightbox that
+   was already loaded on the page; these rules give it a keyboard focus ring.
+   ========================================================================== */
+
+body .gallery-item:focus-visible {
+    outline: 3px solid #1abbec;
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   18. QUICK-CONTACT SIDE PANEL
+   --------------------------------------------------------------------------
+   The panel behind the header's grid icon shipped with the template's demo
+   content. It now carries the real services list, so that list needs styling.
+   ========================================================================== */
+
+body .sidemenu-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body .sidemenu-links li + li {
+    margin-top: 10px;
+}
+
+body .sidemenu-links a {
+    display: inline-block;
+    font-size: var(--hov-fs-body);
+    line-height: 1.6;
+    color: var(--hov-body-color);
+    text-decoration: none;
+    transition: color .25s ease;
+}
+
+body .sidemenu-links a:hover,
+body .sidemenu-links a:focus-visible {
+    color: var(--theme-color);
+}
+
+body .sidemenu-content .th-social a {
+    transition: transform .25s ease, background-color .25s ease;
+}
+
+body .sidemenu-content .th-social a:hover {
+    transform: translateY(-3px);
+}
+
+/* The theme lays .info-box_text out as a flex row but then positions the icon
+   absolutely, so the icon sat on top of the phone number and email address.
+   Putting the icon back in flow restores the intended two-column row. */
+body .sidemenu-content .info-box_text {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+body .sidemenu-content .info-box_text .icon {
+    position: static;
+    flex: 0 0 40px;
+}
+
+body .sidemenu-content .info-box_text .details {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+body .sidemenu-content .info-box_text .details p {
+    margin: 0 0 2px;
+}
+
+body .sidemenu-content .info-box_text .details a,
+body .sidemenu-content .info-box_text .details p {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    overflow-wrap: anywhere;
+}
+
+body .sidemenu-content .th-widget-contact {
+    max-width: 100%;
+}
+
+/* The panel is a fixed 450px, which is wider than a phone. */
+body .sidemenu-wrapper .sidemenu-content {
+    max-width: 92vw;
+}
+
+
+/* ==========================================================================
+   19. LIST + LINK RHYTHM IN HAND-WRITTEN SECTIONS
+   ========================================================================== */
+
+body .hov-list {
+    padding-left: 20px;
+}
+
+body .hov-block a:not(.th-btn) {
+    color: var(--theme-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+body .hov-block a:not(.th-btn):hover {
+    color: var(--hov-heading-color);
+}
+
+/* The service cards listed four selling points each, written one per source
+   line inside a single <p>. HTML collapses those newlines, so they rendered as
+   one run-on sentence: "Tailor-made corporate group tours Experiential travel
+   Team-building programs Business-focused itineraries". They are a list, and
+   are now marked up as one. */
+body .service-card .service-points {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 18px;
+}
+
+body .service-card .service-points li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: var(--hov-fs-body);
+    line-height: 1.6;
+    color: var(--hov-body-color);
+}
+
+body .service-card .service-points li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--theme-color);
+}
+
+body .blog-cta {
+    padding: 32px;
+    border: 1px solid #e3e9f2;
+    border-radius: 16px;
+    background: #f5f9fd;
+}
+
+body .blog-cta h3 {
+    margin-top: 0;
+}
+
+
+/* ==========================================================================
+   20. MICE LOCATION PAGES
+   --------------------------------------------------------------------------
+   The six city pages previously rendered as a flat navy block followed by an
+   unstyled column of text running the full 1,250px container, with eight list
+   items marked up as <h2> so "Venue selection and booking" was the same size as
+   a real section heading. They now use the same section rhythm, card language
+   and CTA treatment as the rest of the site.
+   ========================================================================== */
+
+body .hov-city-section {
+    padding-top: var(--hov-section-space);
+    padding-bottom: var(--hov-section-space);
+}
+
+body .hov-city-section:nth-of-type(even) {
+    background: #f7fafd;
+}
+
+body .hov-city-title {
+    font-size: var(--hov-fs-h2) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 26px !important;
+    max-width: 34ch;
+}
+
+/* Long-form copy needs a measure, not the full container width. */
+body .hov-city-body > p,
+body .hov-city-body > ul,
+body .hov-city-body > h3,
+body .hov-city-body > h4 {
+    max-width: 78ch;
+}
+
+body .hov-city-body > p {
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+    margin: 0 0 18px;
+}
+
+body .hov-city-lead {
+    font-size: var(--hov-fs-lead) !important;
+    line-height: 1.75 !important;
+    color: #3d4a5c !important;
+}
+
+body .hov-city-body > h3 {
+    font-size: var(--hov-fs-h3) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 30px 0 12px !important;
+}
+
+body .hov-city-body > h4 {
+    font-size: var(--hov-fs-h4) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 24px 0 10px !important;
+}
+
+/* The original copy welded a phone CTA onto the end of the intro sentence
+   ("…a leading MICE company in DelhiCall us Now : +91-9220470800"). It is now
+   its own line and a real tel: link. */
+body .hov-city-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 0;
+    padding: 10px 18px;
+    border: 1px solid #cfe3f4;
+    border-radius: 30px;
+    background: #f2f9fe;
+    font-size: var(--hov-fs-body);
+    font-weight: 500;
+    color: var(--hov-heading-color);
+}
+
+body .hov-city-call a {
+    color: var(--theme-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body .hov-city-call a:hover {
+    text-decoration: underline;
+}
+
+/* ---- card grid (runs of heading + paragraph) --------------------------- */
+body .hov-city-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+    margin: 8px 0 26px;
+}
+
+body .hov-city-card {
+    background: #fff;
+    border: 1px solid #e3e9f2;
+    border-radius: 16px;
+    padding: 26px 24px;
+    box-shadow: 0 14px 32px -26px rgba(8, 37, 103, .45);
+    transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+
+body .hov-city-card:hover {
+    transform: translateY(-4px);
+    border-color: #c9dbee;
+    box-shadow: 0 20px 40px -24px rgba(8, 37, 103, .5);
+}
+
+body .hov-city-card h3 {
+    font-size: var(--hov-fs-h4) !important;
+    font-weight: 600 !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 10px !important;
+}
+
+body .hov-city-card p {
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+    margin: 0;
+}
+
+/* ---- chip list (was eight stacked <h2>) -------------------------------- */
+body .hov-chip-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+    margin: 6px 0 24px;
+    max-width: 100%;
+}
+
+body .hov-chip-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 18px;
+    border: 1px solid #d9e5f1;
+    border-radius: 30px;
+    background: #fff;
+    font-size: var(--hov-fs-small);
+    line-height: 1.4;
+    color: var(--hov-heading-color);
+}
+
+body .hov-chip-list li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--theme-color);
+    flex: none;
+}
+
+/* ---- plain content lists ---------------------------------------------- */
+body .hov-city-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px;
+}
+
+body .hov-city-list li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 10px;
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+body .hov-city-list li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--theme-color);
+}
+
+/* ---- FAQ accordion ----------------------------------------------------- */
+body .hov-faq {
+    max-width: 900px;
+}
+
+body .hov-faq-item {
+    border: 1px solid #e3e9f2;
+    border-radius: 14px;
+    background: #fff;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+body .hov-faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 56px 20px 22px;
+    position: relative;
+    font-size: var(--hov-fs-h6);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--hov-heading-color);
+}
+
+body .hov-faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+body .hov-faq-item summary::after {
+    content: "";
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin-top: -7px;
+    border-right: 2px solid var(--theme-color);
+    border-bottom: 2px solid var(--theme-color);
+    transform: rotate(45deg);
+    transition: transform .25s ease;
+}
+
+body .hov-faq-item[open] summary::after {
+    margin-top: -2px;
+    transform: rotate(-135deg);
+}
+
+body .hov-faq-item summary:hover,
+body .hov-faq-item summary:focus-visible {
+    background: #f4f9fd;
+}
+
+body .hov-faq-answer {
+    padding: 0 22px 20px;
+}
+
+body .hov-faq-answer p {
+    margin: 0;
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+/* ---- closing CTA ------------------------------------------------------- */
+body .hov-city-cta {
+    padding: var(--hov-section-space) 0;
+    background: var(--hov-heading-color);
+}
+
+body .hov-city-cta-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+body .hov-city-cta-inner > div:first-child {
+    flex: 1 1 460px;
+}
+
+body .hov-city-cta .sub-title {
+    color: #6fd3f2 !important;
+    display: block;
+}
+
+body .hov-city-cta h2 {
+    font-size: var(--hov-fs-h2) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: #fff !important;
+    margin: 0 0 12px !important;
+}
+
+body .hov-city-cta p {
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: rgba(255, 255, 255, .82);
+    margin: 0;
+    max-width: 62ch;
+}
+
+body .hov-city-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+@media (max-width: 575.98px) {
+
+    body .hov-city-cta-actions,
+    body .hov-city-cta-actions .th-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    body .hov-city-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   21. HEADER DROPDOWNS
+   --------------------------------------------------------------------------
+   The Services and Locations menus render through the theme's .sub-menu, which
+   ships as a square white panel with a hard edge. These rules give it the same
+   radius, shadow and hover language as the cards elsewhere on the site, and
+   keep a wide submenu from running off the right edge of the viewport.
+   ========================================================================== */
+
+body .main-menu ul.sub-menu {
+    min-width: 248px;
+    padding: 10px 0;
+    border: 1px solid #e6edf5;
+    border-radius: 12px;
+    box-shadow: 0 22px 48px -26px rgba(8, 37, 103, .55);
+    overflow: hidden;
+}
+
+body .main-menu ul.sub-menu li {
+    margin: 0;
+}
+
+body .main-menu ul.sub-menu li a {
+    padding: 9px 20px;
+    font-size: var(--hov-fs-small);
+    line-height: 1.5;
+    border-bottom: 0;
+    transition: background-color .2s ease, color .2s ease, padding-left .2s ease;
+}
+
+body .main-menu ul.sub-menu li a:hover,
+body .main-menu ul.sub-menu li a:focus-visible,
+body .main-menu ul.sub-menu li a.active {
+    background: #f2f8fd;
+    color: var(--theme-color);
+    padding-left: 26px;
+}
+
+/* A caret makes it discoverable that the item opens a menu. */
+body .main-menu > ul > li.menu-item-has-children > a::after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 8px;
+    vertical-align: 2px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform .25s ease;
+}
+
+body .main-menu > ul > li.menu-item-has-children:hover > a::after {
+    transform: rotate(-135deg);
+    vertical-align: -1px;
+}
+
+/* The last top-level dropdown would otherwise open past the viewport edge. */
+body .main-menu > ul > li.menu-item-has-children:last-of-type > ul.sub-menu {
+    left: auto;
+    right: 0;
+}
+
+/* Mobile drawer: the submenu is a nested list, so give it a clear indent and
+   a rule so it reads as a child of the item above it. */
+body .th-mobile-menu ul.sub-menu {
+    margin-left: 12px;
+    padding-left: 12px;
+    border-left: 2px solid #e6edf5;
+}
+
+body .th-mobile-menu ul.sub-menu li a {
+    font-size: var(--hov-fs-small);
+}
+
+
+/* ==========================================================================
+   22. GLOBAL PRESENCE
+   ========================================================================== */
+
+body .global-presence {
+    padding: var(--hov-section-space) 0;
+    background: #f7fafd;
+}
+
+body .global-presence .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+body .global-presence .section-title span {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--theme-color);
+    margin-bottom: 12px;
+}
+
+body .global-presence .section-title p {
+    max-width: 74ch;
+    margin: 16px auto 0;
+    font-size: var(--hov-fs-lead);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+body .presence-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 46px;
+    align-items: start;
+}
+
+body .presence-map {
+    position: sticky;
+    top: 110px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e3e9f2;
+    box-shadow: 0 20px 44px -30px rgba(8, 37, 103, .5);
+}
+
+body .presence-map img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+body .presence-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 34px;
+}
+
+body .presence-stat {
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #e3e9f2;
+    border-radius: 14px;
+}
+
+body .presence-stat strong {
+    display: block;
+    font-family: var(--title-font);
+    font-size: clamp(24px, 2.6vw, 30px);
+    line-height: 1.15;
+    color: var(--hov-heading-color);
+}
+
+body .presence-stat span {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--hov-fs-small);
+    line-height: 1.5;
+    color: var(--hov-body-color);
+}
+
+body .presence-group {
+    margin-bottom: 26px;
+}
+
+body .presence-group h3 {
+    font-size: var(--hov-fs-h6) !important;
+    font-weight: 600 !important;
+    letter-spacing: .02em;
+    color: var(--hov-heading-color) !important;
+    margin: 0 0 12px !important;
+}
+
+body .presence-chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+body .presence-chips li {
+    margin: 0;
+}
+
+body .presence-chips li a,
+body .presence-chips-plain li {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 1px solid #d9e5f1;
+    border-radius: 30px;
+    background: #fff;
+    font-size: var(--hov-fs-small);
+    line-height: 1.4;
+    color: var(--hov-heading-color);
+    text-decoration: none;
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease, transform .2s ease;
+}
+
+body .presence-chips li a:hover,
+body .presence-chips li a:focus-visible {
+    background: var(--hov-heading-color);
+    border-color: var(--hov-heading-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+body .presence-cta {
+    margin-top: 8px;
+}
+
+/* A light button for use on the dark CTA panels. .th-btn.style3 is a navy fill,
+   which disappeared against the navy background of the location-page CTA. */
+body .th-btn.hov-btn-light {
+    background-color: #fff;
+    color: var(--hov-heading-color);
+    border: 1px solid #fff;
+}
+
+body .th-btn.hov-btn-light:hover,
+body .th-btn.hov-btn-light:focus-visible {
+    background-color: #1abbec;
+    border-color: #1abbec;
+    color: #fff;
+}
+
+body .th-btn.hov-btn-light::before,
+body .th-btn.hov-btn-light::after {
+    display: none;
+}
+
+body .hov-city-cta .th-btn.style2 {
+    border-color: rgba(255, 255, 255, .6);
+    color: #fff;
+}
+
+body .hov-city-cta .th-btn.style2:hover {
+    background-color: #fff;
+    color: var(--hov-heading-color);
+}
+
+@media (max-width: 991.98px) {
+    body .presence-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    body .presence-map {
+        position: static;
+    }
+}
+
+@media (max-width: 479.98px) {
+    body .presence-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   23. ICON TREATMENT
+   --------------------------------------------------------------------------
+   The same contact icons appeared three ways: a solid blue disc on the contact
+   page, a pale blue disc in the side panel, and a bare cyan glyph in the
+   footer. One treatment per context, applied consistently.
+   ========================================================================== */
+
+body .footer-box .contact-item i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(26, 187, 236, .14);
+    color: #1abbec;
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+
+/* ==========================================================================
+   24. HORIZONTAL OVERFLOW GUARD
+   ========================================================================== */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body .row {
+    --bs-gutter-x: 24px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

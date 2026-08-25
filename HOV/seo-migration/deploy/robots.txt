@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Obsolete WordPress paths — all 301 to live pages, but block crawl waste
+Disallow: /wp-admin/
+Disallow: /wp-json/
+Disallow: /wp-includes/
+Disallow: /author/
+Disallow: /*?no-cache=
+Disallow: /*?attachment_id=
+
+# Images must stay crawlable — Google Images traffic depends on this
+Allow: /wp-content/uploads/
+Allow: /assets/
+
+Sitemap: https://houseofvacation.com/sitemap.xml

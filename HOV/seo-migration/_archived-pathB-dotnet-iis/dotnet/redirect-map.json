@@ -1,0 +1,25 @@
+[
+  { "From": "/category/uncategorized/",            "To": "/blog/" },
+  { "From": "/hello-world/",                       "To": "/blog/" },
+  { "From": "/new-blog/",                          "To": "/blog/" },
+  { "From": "/author/essenceofnature43gmail-com/", "To": "/blog/" },
+
+  { "From": "/feed/",                              "To": "/blog/" },
+  { "From": "/blog/feed/",                         "To": "/blog/" },
+  { "From": "/comments/feed/",                     "To": "/blog/" },
+  { "From": "/category/uncategorized/feed/",       "To": "/blog/" },
+
+  { "From": "/index.php",                          "To": "/" },
+  { "From": "/wp-login.php",                       "To": "/" },
+  { "From": "/xmlrpc.php",                         "To": "/" },
+  { "From": "/page/2/",                            "To": "/" },
+  { "From": "/page/3/",                            "To": "/" },
+  { "From": "/2024/",                              "To": "/" },
+  { "From": "/2025/",                              "To": "/" },
+
+  { "From": "/sitemap_index.xml",                  "To": "/sitemap.xml" },
+  { "From": "/wp-sitemap.xml",                     "To": "/sitemap.xml" },
+  { "From": "/post-sitemap.xml",                   "To": "/sitemap.xml" },
+  { "From": "/page-sitemap.xml",                   "To": "/sitemap.xml" },
+  { "From": "/category-sitemap.xml",               "To": "/sitemap.xml" }
+]
