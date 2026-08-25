@@ -308,10 +308,26 @@ Hero Area
            content.
            ==================================================================== */
 
+        /* Banner artwork is 1343x650 (ratio 2.07) shown in a box nearer 3.5:1,
+           so `cover` always has height to discard - about 389px of it at
+           1920px wide. The question is only which 389px.
+
+           The photograph is a landmark collage: the top ~45% is empty sky and
+           the subject band (Santorini, the pyramid, the Taj Mahal, the Burj,
+           the Statue of Liberty, the Eiffel Tower, the Colosseum, and the
+           waterline they all stand on) sits in the lower half. `center center`
+           split the loss evenly, which meant it cut the waterline and the base
+           of every building off the bottom while carefully preserving blank
+           sky at the top.
+
+           Anchoring to the bottom spends the entire crop on that empty sky and
+           keeps the whole subject band, in frame and uncut, at every width.
+           `cover` is kept - the box is still filled edge to edge and the image
+           keeps its aspect ratio, so nothing is stretched. */
         .hero-5 {
             position: relative;
             overflow: hidden;
-            background: url("H/assets/img/HOV BANNER.jpg") center center / cover no-repeat;
+            background: url("H/assets/img/HOV BANNER.jpg") center bottom / cover no-repeat;
         }
 
         .hero-5::after {
@@ -418,6 +434,68 @@ Hero Area
         .hero-5 .hero-pagination .swiper-pagination-bullet-active {
             width: 44px;
             background: #fff;
+        }
+
+        /* ---- Hero portraits ---------------------------------------------
+           The theme positions this block absolutely at `top: 22.5%` and lets
+           .hero-5's overflow:hidden clip whatever falls past the bottom. That
+           only ever worked at one exact height:
+
+             slide height 640px   top = 144.0px + 496px tall = 640.0px  fits
+             slide height 540px   top = 121.5px + 496px tall = 617.5px  77px cut
+
+           A percentage offset measured from the top cannot keep a fixed-height
+           block inside a box whose height changes - the block falls out of the
+           bottom as soon as the box gets shorter. Centring on the vertical axis
+           makes the clearance share itself equally above and below instead, so
+           the portraits stay whole at any slide height.
+
+           The two boxes are then scaled by 0.867 so the taller one fits inside
+           the compact hero with room to spare:
+
+             .hero-img   274x416 -> 238x361
+             .hero-img2  327x492 -> 284x430   (430px in 540px = 55px clear)
+
+           Both keep their 0.66 ratio, which is also the exact ratio of every
+           photograph in the slider, so object-fit: cover still crops nothing
+           and nothing is stretched. The overlap is scaled by the same factor
+           so the pairing looks unchanged.
+
+           Forced back to absolute at 1200-1299px too: the theme switches this
+           block to position:relative there, which would turn the centring
+           offset into a downward shove of half the container's height. */
+        @media (min-width: 1200px) {
+
+            .hero-5 .th-hero-image {
+                position: absolute;
+                top: 50%;
+                /* the theme's 1299px block sets `right: unset`, which would
+                   drop an absolute box back to its static position and slide
+                   it over the copy - re-anchored here for the whole range */
+                right: 2%;
+                transform: translateY(-50%);
+                align-items: center;
+                padding-bottom: 0;
+            }
+
+            .hero-5 .th-hero-image .hero-img {
+                min-width: 238px;
+                height: 361px;
+            }
+
+            .hero-5 .th-hero-image .hero-img2 {
+                min-width: 284px;
+                height: 430px;
+                margin-left: -43px;
+            }
+        }
+
+        /* The theme's own wide-screen inset, restated because the rule above
+           pins `right` for the whole >=1200px range. */
+        @media (min-width: 1600px) {
+            .hero-5 .th-hero-image {
+                right: 10%;
+            }
         }
 
         /* Below 1200px the theme drops .th-hero-image into the flow, where the
