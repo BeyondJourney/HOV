@@ -226,6 +226,58 @@ function Convert-AssetPaths {
     return $Html
 }
 
+# ---------------------------------------------------------------------------
+#  PORTABLE PATHS
+#
+#  A root-relative URL ("/assets/img/x.jpg") only resolves when the site IS the
+#  document root. Drop the same build into a subfolder and every one of them
+#  points above that folder and 404s - which is exactly what happened in
+#  /prod_HOV/.
+#
+#  Rewriting them document-relative ("../assets/img/x.jpg") lets ONE build run
+#  unchanged at the domain root and in any subfolder, at any depth, on any
+#  domain. Nothing needs rebuilding when the site moves.
+#
+#  Depth is the number of folders between the page and the deploy root:
+#    /index.html                depth 0  ->  "assets/img/x.jpg"
+#    /about-company/index.html  depth 1  ->  "../assets/img/x.jpg"
+#
+#  This depends on the trailing slash being present, which DirectorySlash
+#  issues natively as a 301 for every real directory (see .htaccess) - so it
+#  holds regardless of where the site is mounted.
+#
+#  Left untouched on purpose: absolute URLs (canonical, og:url, og:image, and
+#  the JSON-LD block), protocol-relative //, #anchors, tel: and mailto:.
+# ---------------------------------------------------------------------------
+function Convert-ToRelative {
+    param([string]$Html, [int]$Depth)
+    $prefix = if ($Depth -le 0) { "" } else { "../" * $Depth }
+
+    # href / src / data-mask-src / content / action = "/x"
+    $Html = [regex]::Replace($Html, '(?i)(\s(?:href|src|data-mask-src|content|action)=")/(?!/)([^"]*)"', {
+        param($m)
+        $v = $prefix + $m.Groups[2].Value
+        if ($v -eq "") { $v = "./" }     # href="/" at depth 0 must not become href=""
+        $m.Groups[1].Value + $v + '"'
+    })
+
+    # url() in inline styles. Split into quoted and unquoted forms on purpose:
+    # four of these filenames contain parentheses ("... BANNNER (1).jpg"), and a
+    # single pattern that stops at the first ")" silently skips exactly those.
+    # Inside quotes the closing quote is the terminator, so parens are safe.
+    $Html = [regex]::Replace($Html, '(?i)url\(\s*(["''])/(?!/)(.*?)\1\s*\)', {
+        param($m)
+        $q = $m.Groups[1].Value
+        'url(' + $q + $prefix + $m.Groups[2].Value + $q + ')'
+    })
+    # Unquoted url(/x) - a bare URL token cannot contain ) or whitespace anyway.
+    $Html = [regex]::Replace($Html, '(?i)url\(\s*/(?!/)([^)"''\s]*)\s*\)', {
+        param($m)
+        'url(' + $prefix + $m.Groups[1].Value + ')'
+    })
+    return $Html
+}
+
 function Write-Page {
     param([string]$Html, [string]$UrlPath)
     $dest = if ($UrlPath -eq "") { $Deploy } else { Join-Path $Deploy $UrlPath }
@@ -408,6 +460,35 @@ foreach ($pf in (Get-ChildItem $Deploy -Recurse -Filter index.html |
     Write-Text $pf.FullName $html
 }
 Write-Host "  added width/height to $dimImgs images across $dimPages pages" -ForegroundColor Gray
+
+Write-Host "`n=== 8. Portable paths (root-relative -> document-relative) ===" -ForegroundColor Cyan
+# Runs dead last, after Repair-Images: every earlier step resolves asset paths
+# against the deploy root, so they must still be root-relative until now.
+$portPages = 0; $portRefs = 0
+foreach ($pf in (Get-ChildItem $Deploy -Recurse -Filter index.html |
+                 Where-Object { $_.Directory.FullName -notlike "*\assets*" })) {
+    $relDir = $pf.Directory.FullName.Substring($Deploy.Length).Trim('\')
+    $depth  = if ($relDir -eq "") { 0 } else { $relDir.Split([char]0x5C).Count }
+    $html   = Read-Text $pf.FullName
+    $portRefs += ([regex]::Matches($html, '(?i)(?:href|src|data-mask-src|content|action)="/(?!/)')).Count
+    $html   = Convert-ToRelative -Html $html -Depth $depth
+    Write-Text $pf.FullName $html
+    $portPages++
+}
+Write-Host "  rewrote $portRefs references across $portPages pages" -ForegroundColor Gray
+
+# The 404 page is the one exception. ErrorDocument serves it at whatever depth
+# the bad URL happened to have (/a/b/c/ -> still /404.html), so there is no
+# fixed depth to compute a relative path from. Absolute URLs are the only form
+# that resolves correctly from every one of them.
+$e404 = Join-Path $Deploy "404.html"
+if (Test-Path $e404) {
+    $h = Read-Text $e404
+    $n = ([regex]::Matches($h, '(?i)(?:href|src)="/(?!/)')).Count
+    $h = [regex]::Replace($h, '(?i)(\s(?:href|src)=")/(?!/)', { param($m) $m.Groups[1].Value + $SiteUrl + "/" })
+    Write-Text $e404 $h
+    Write-Host "  /404.html: $n links made absolute (served at unpredictable depth)" -ForegroundColor Gray
+}
 
 Write-Host "`n=== EXCLUDED ===" -ForegroundColor Cyan
 $Excluded | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }

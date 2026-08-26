@@ -33317,19 +33317,23 @@ section:has(.mice-main-title) > div:first-child {
 .swiper{
     overflow: hidden;
 }
+/* The banner box only declares that it is a full-width flex row here.
+
+   Removed from this block:
+     background-image: url("H/assets/img/HOV about banner")
+       No file extension, and the path resolves relative to this stylesheet
+       (assets/css/H/assets/img/...), so it 404'd on every page load. Each page
+       sets its own banner artwork in its <style> block, which is what has
+       always been on screen.
+     height: 450px !important  (declared twice)
+       Fought the padding this same file sets on .breadcumb-wrapper further up.
+       Banner height now comes from one place, site-fixes.css section 3.
+     border: 2px sd
+       Not a valid border-style; the declaration was discarded by the parser. */
 .breadcumb-wrapper{
-    background-image: url("H/assets/img/HOV about banner");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 450px !important;
     width: 100%;
     display: flex;
     align-items: center;
-}
-.breadcumb-wrapper{
-    height:450px !important;
-    border:2px sd;
 }
 /* ===== CONTACT CARDS ===== */
 

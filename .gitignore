@@ -54,3 +54,9 @@ $RECYCLE.BIN/
 .idea/
 *.sublime-workspace
 *.code-workspace
+
+# Deploy artifacts - regenerable via seo-migration/build-deploy.ps1.
+# public_html/ IS tracked (it is the reviewable build output); the zip and any
+# folder unzipped from it are duplicates of it and are not.
+HOV/seo-migration/_deploy/*.zip
+HOV/seo-migration/_deploy/hov-public_html-*/

@@ -27,6 +27,16 @@
     --hov-section-space-mobile: 35px;
     --hov-block-space: 45px;
 
+    /* ---- Banner height --------------------------------------------------
+       One pair of values drives every inner-page banner and the home hero.
+       --hov-banner-min is the floor the banner never drops below;
+       --hov-banner-pad is the breathing room above and below the text.
+       They are stepped down together in section 9 so a banner never becomes
+       a thin strip on a phone or a full screen of empty artwork on a
+       desktop. Change them here, not on individual pages.                  */
+    --hov-banner-min: 300px;
+    --hov-banner-pad: 64px;
+
     /* ---- Type scale ----------------------------------------------------- */
     --hov-fs-banner: clamp(30px, 4.6vw, 48px);
     --hov-fs-h1: clamp(28px, 4.2vw, 42px);
@@ -45,6 +55,11 @@
     /* ---- Colour --------------------------------------------------------- */
     --hov-heading-color: #082567;
     --hov-body-color: #555555;
+
+    /* The HOV brand teal. The template ships --theme-color: #1CA8CB, which is
+       a near-miss of it; where the brand colour is called for by name it is
+       taken from here so the two never drift apart again.                   */
+    --hov-teal: #0bb5b8;
 
     /* ---- Re-point the template's own tokens at the same values ---------- *
      * The template shipped with "Franklin Gothic Medium", which is not a web
@@ -93,6 +108,26 @@ body .mice-cards-grid-container {
 /* Bootstrap 5 rows already carry their own -12px side margins and columns
    their own +12px padding, so a .row child and a plain child of the container
    both land on the same 24px edge. Nothing further to correct here. */
+
+/* On a wide monitor a 1250px band left roughly 335px of empty page down each
+   side at 1920px, which is what reads as "the site isn't using the screen".
+   The container opens up in two steps above 1600px. It is the same single
+   token every section resolves to, so the edges still line up with each other
+   — only the band itself is wider. Content stays inside a readable measure:
+   the paragraph rules in sections 4 and 19 are capped in ch units, so body
+   copy does not stretch into long lines as the container grows. */
+@media (min-width: 1600px) {
+    :root {
+        --hov-container: 1360px;
+        --hov-gutter: 32px;
+    }
+}
+
+@media (min-width: 1900px) {
+    :root {
+        --hov-container: 1460px;
+    }
+}
 
 
 /* ==========================================================================
@@ -185,13 +220,38 @@ body .sec-text {
    Gothic. Same element, two different treatments.
    ========================================================================== */
 
+/* Height came from three places at once and nothing reconciled them:
+
+     style.css                .breadcumb-wrapper  padding: 163px 0
+     style.css (end of file)  .breadcumb-wrapper  height: 450px !important
+     each page's own <style>  .breadcumb-wrapper  height: 450px
+
+   The 450px floor and the 326px of vertical padding are additive — the padding
+   sits inside the box and the text sits inside the padding — so every banner
+   resolved to roughly 480-520px, i.e. a third of a laptop screen before any
+   content was reached. Both inputs are pinned here to one pair of tokens, so
+   the banner is now as tall as its content plus deliberate breathing room and
+   never less than --hov-banner-min.
+
+   The header is position: relative and in normal flow (it only becomes fixed
+   once .sticky is added on scroll), so it never overlaps the banner and this
+   padding is free to shrink. */
 body .breadcumb-wrapper {
     height: auto !important;
-    min-height: 450px !important;
+    min-height: var(--hov-banner-min) !important;
+    padding-top: var(--hov-banner-pad) !important;
+    padding-bottom: var(--hov-banner-pad) !important;
     display: flex !important;
     align-items: center !important;
     position: relative;
     overflow: hidden;
+    /* The artwork is applied per page as a background-image. Centring it keeps
+       the middle of the photograph in view as the box gets shorter, so the
+       reduced height crops evenly top and bottom rather than lopping off the
+       subject. */
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
 }
 
 /* Each page painted its own scrim at rgba(0,0,0,.35), which is not enough for
@@ -279,6 +339,13 @@ body .breadcumb-menu span {
     font-size: var(--hov-fs-lead) !important;
     line-height: var(--hov-lh-body);
 }
+
+/* The home hero is deliberately NOT touched from here. index.html already
+   neutralises the theme's `.hero-style5 { padding: 303px 0 307px }` and moves
+   the hero's vertical rhythm onto .hero-inner, in a documented block at the
+   top of that page. An !important padding rule in this file would outrank that
+   work and undo it. The hero's height is tuned in index.html, next to the rest
+   of its geometry. */
 
 /* Home page hero — was 58px / 20px against the banner's 54–56px / 22px. */
 body .hero-style5 .hero-title {
@@ -622,20 +689,35 @@ body .mice-card-content-box {
    the vertical rhythm need stepping down.
    ========================================================================== */
 
-@media (max-width: 575.98px) {
-    :root {
-        --hov-gutter: 16px;
-    }
-}
+/* Every inner-page banner steps down through the same two tokens, so they all
+   resize together and none of them needs a rule of its own. The values fall
+   roughly in proportion to the type scale above: the text block shrinks, the
+   space around it shrinks with it, and the ratio of artwork to text stays
+   recognisable from 1920px down to 375px.
+
+   The home hero is not driven from here — see the note in section 3. */
 
 @media (max-width: 991.98px) {
     :root {
         --hov-section-space: var(--hov-section-space-mobile);
         --hov-block-space: 32px;
+        --hov-banner-min: 240px;
+        --hov-banner-pad: 52px;
     }
+}
 
-    body .breadcumb-wrapper {
-        min-height: 340px !important;
+@media (max-width: 767.98px) {
+    :root {
+        --hov-banner-min: 210px;
+        --hov-banner-pad: 44px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    :root {
+        --hov-gutter: 16px;
+        --hov-banner-min: 185px;
+        --hov-banner-pad: 38px;
     }
 }
 
@@ -1873,5 +1955,280 @@ html {
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+}
+
+
+/* ==========================================================================
+   25. TESTIMONIAL CARDS (about page)
+   --------------------------------------------------------------------------
+   Three separate faults made the row look misaligned. None of them is the
+   carousel's raised-active-slide effect, which is deliberate and is left alone.
+
+     1. .testi-card_avater is declared `min-width: 72px` and every one of the
+        eight cards is an empty <div>. Each card therefore opened with 72px of
+        nothing, plus the profile row's 16px gap, before the customer name —
+        so the names sat 88px in from the card edge with no avatar to explain
+        the offset, and the stars opposite them looked pushed out.
+
+     2. .testi-card is a plain block inside a flex slide, so its height was
+        whatever its quotation happened to need. The quotations run from 130
+        to 280 characters, so card bottoms landed anywhere and the quote badge
+        — absolutely positioned against the card's own bottom edge — landed
+        with them.
+
+     3. .testi-card-quote is centred with `left: 48%` on top of
+        `translateX(-50%)`, which is 2% off centre rather than centred.
+   ========================================================================== */
+
+/* 1. The avatar box only reserves space when it actually holds a picture.
+      The empty <div> is kept in the markup as the hook for future portraits;
+      it simply stops occupying a column until one is added. */
+body .testi-card_avater:not(:has(img)) {
+    display: none;
+}
+
+/* 2. Cards fill their slide, so every card in a row ends on the same line and
+      the quote badge sits at a consistent height. The quotation takes the
+      slack, which keeps the profile row pinned to the top of the card and the
+      badge pinned to the bottom regardless of how long the text is. */
+body .testiSlider1 .swiper-slide {
+    display: flex;
+    height: auto;
+}
+
+body .testiSlider1 .testi-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+body .testi-card_text {
+    flex: 1 1 auto;
+    /* was -0.3rem, which pulled the badge up into the last line of text */
+    margin-bottom: 0 !important;
+    font-size: var(--hov-fs-lead) !important;
+    line-height: var(--hov-lh-body) !important;
+    text-align: left;
+}
+
+/* 3. Actually centred. */
+body .testi-card-quote {
+    left: 50%;
+}
+
+/* The profile row and the stars are the two halves of one line; align them on
+   their centres so a one-line name and a five-star run read as a single row. */
+body .testi-card_wrapper {
+    align-items: center;
+    gap: 16px;
+}
+
+body .testi-card_profile {
+    min-width: 0;
+}
+
+body .testi-card .box-title {
+    font-size: var(--hov-fs-h6) !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Stars must not wrap to a second line when a name is long. */
+body .testi-card_review {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+/* Below 480px the template turns .testi-card_wrapper into a block, so the
+   stars fall under the name. Keep them left-aligned with it rather than
+   inheriting the card's centring. */
+@media (max-width: 479.98px) {
+    body .testi-card_wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+
+/* ==========================================================================
+   26. FOOTER SOCIAL ICONS — the contact page treatment, everywhere
+   --------------------------------------------------------------------------
+   .social-icons is not styled in any stylesheet. Every page carries its own
+   copy inside a <style> block in the body, and the copies had drifted:
+
+     every page except contact.html   gap 12px, disc rgba(255,255,255,.08)
+     contact.html                     the same block, plus three earlier
+                                      !important rules overriding it to
+                                      gap 15px and a solid #f3f3f3 disc
+
+   On the #0A2740 footer a disc at 8% white is all but invisible, which is why
+   only the contact page looked right. The contact page's treatment is adopted
+   here as the single definition for the whole site.
+
+   One thing is deliberately not copied. On contact.html the disc colour is set
+   with !important, so it also beat that page's own :hover rule — the disc
+   never changed colour on hover and the icon turned white on pale grey, which
+   is invisible. The hover the markup was always asking for (teal disc, white
+   glyph) is restored, so the icons now behave the same everywhere too.
+
+   Scoped to .hov-footer so the second .social-icons block on contact.html,
+   which sits in the page body rather than the footer, is left untouched. */
+
+/* !important for the reason given in the file header: these rules have to beat
+   each page's own <style> block, and on contact.html that block is itself
+   !important. Without it the contact page would keep its stuck hover and the
+   other twenty pages would keep the invisible disc. */
+
+body .hov-footer .social-icons {
+    display: flex !important;
+    gap: 15px !important;
+    margin-top: 30px !important;
+}
+
+body .hov-footer .social-icons a {
+    width: 45px !important;
+    height: 45px !important;
+    flex: 0 0 45px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f3f3f3 !important;
+    color: var(--hov-teal) !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    transition: background-color .3s ease, color .3s ease, transform .3s ease;
+}
+
+body .hov-footer .social-icons a:hover,
+body .hov-footer .social-icons a:focus-visible {
+    background: var(--hov-teal) !important;
+    color: #fff !important;
+    transform: translateY(-5px);
+}
+
+/* The glyph is a Font Awesome <i>; section 23 gives .contact-item i its own
+   disc, and this must not inherit that treatment. */
+body .hov-footer .social-icons a i {
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    color: inherit !important;
+    font-size: inherit !important;
+}
+
+@media (max-width: 767.98px) {
+    body .hov-footer .social-icons {
+        justify-content: center !important;
+    }
+}
+
+
+/* ==========================================================================
+   27. HOME HERO CTA PAIR
+   --------------------------------------------------------------------------
+   The two hero buttons were different components rather than a pair:
+
+     Explore Our Services   .th-btn.style3.th-icon   solid #113D48, arrow,
+                                                    wipes to #1CA8CB on hover
+     Plan Your Offsite Now  .th-btn.style2           transparent with a 1px
+                                                    white border, no arrow
+
+   Plan Your Offsite Now now carries .style3.th-icon in the markup, so it picks
+   up the same fill, height, radius, padding, typography and arrow from the
+   component itself — there is no second set of button rules to keep in sync.
+   The single distinction is the hover wipe, which is the brand teal so the two
+   buttons remain visually distinguishable as primary and secondary.
+
+   .th-btn:before is the wipe that grows across the button on hover;
+   .th-icon:after is the arrow glyph, drawn as a mask so it is coloured with
+   background-color rather than color.                                       */
+
+body .th-btn.style3.hov-cta-teal:before {
+    background-color: var(--hov-teal);
+}
+
+body .th-btn.style3.hov-cta-teal:hover.th-icon:after,
+body .th-btn.style3.hov-cta-teal:focus-visible.th-icon:after {
+    background-color: #fff;
+}
+
+/* Both buttons sit on one baseline, keep an even gap, and wrap as a unit
+   rather than stretching to full width when the slide gets narrow. */
+body .hero-style5 .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+body .hero-style5 .btn-group .th-btn {
+    margin: 0;
+}
+
+@media (max-width: 575.98px) {
+    body .hero-style5 .btn-group .th-btn {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* ==========================================================================
+   28. SECTION HEADINGS — use the whole column, break evenly
+   --------------------------------------------------------------------------
+   "Creating Meaningful Corporate Experiences Worldwide" sits in a .col-xl-6
+   next to the about image. What that column actually offered the heading was:
+
+       1250px container
+     ÷ 2                            625px   the col-xl-6
+     - 24px  Bootstrap col padding  601px
+     - 48px  .ps-xl-5               553px
+
+   The heading needs about 980px on one line at 36px, so it wrapped after
+   "Corporate" — filling line one to 562px and leaving line two ("Experiences
+   Worldwide", 412px) about 170px short. That short second line is the empty
+   space beside the heading.
+
+   Two things are corrected. The .ps-xl-5 indent is dropped back to the grid
+   gutter on xl and up, which returns 48px (and more on the wider container
+   above), and headings are told to balance their line breaks, so the text is
+   divided evenly across the lines it needs instead of running one line to the
+   edge and orphaning the remainder.
+
+   Note what is NOT done here, deliberately: the heading is not forced onto one
+   line. At 36px it needs ~980px and the widest this column ever gets is
+   ~656px, so white-space: nowrap would push it straight out of the column and
+   into a horizontal scrollbar. Getting it onto one line means either a smaller
+   heading or a wider column — see the summary. */
+
+body .title-area .sec-title,
+body .sec-title {
+    max-width: 100%;
+    /* Progressive: browsers without it simply keep the current greedy wrap. */
+    text-wrap: balance;
+    overflow-wrap: break-word;
+}
+
+/* The extra 48px indent is what pushed this heading into a third line:
+
+     553px column, .ps-xl-5 at 48px   "Creating Meaningful"           3 lines
+     577px column, indent at 24px     "Creating Meaningful Corporate" 2 lines
+
+   Halved rather than removed — the grid gutter alone leaves only 24px between
+   the about image and the text, which is too tight — and scoped to the about
+   section rather than every .ps-xl-5 on the site, so no other two-column block
+   shifts. Below xl Bootstrap does not apply .ps-xl-5 at all, so tablet and
+   mobile are untouched. */
+@media (min-width: 1200px) {
+    body #about-sec .ps-xl-5 {
+        padding-left: 1.5rem !important;
     }
 }

@@ -36,13 +36,27 @@ function Get-Url ($file) {
     if ($rel -eq "") { return "/" }
     return "$rel/"
 }
-function Resolve-LocalPath ($url) {
+function Resolve-LocalPath ($url, $BaseDir = $Deploy) {
+    # Paths are document-relative now, so resolution needs the directory of the
+    # page doing the referencing. Root-relative input still resolves against the
+    # deploy root so the P0/critical-asset checks keep working unchanged.
     $u = ($url -split '[?#]')[0]
-    if ($u -eq "/" -or $u -eq "") { return (Join-Path $Deploy "index.html") }
-    $p = $u.TrimStart('/').Replace('/','\')
-    $direct = Join-Path $Deploy $p
-    if (Test-Path $direct -PathType Leaf) { return $direct }
-    $idx = Join-Path $Deploy (Join-Path $p "index.html")
+    if ($u -eq "")   { return $null }
+    if ($u -eq "/")  { return (Join-Path $Deploy "index.html") }
+    if ($u -eq "./") { return (Join-Path $BaseDir "index.html") }
+
+    if ($u.StartsWith("/")) { $root = $Deploy;  $p = $u.TrimStart('/') }
+    else                    { $root = $BaseDir; $p = $u }
+
+    $combined = Join-Path $root ($p.Replace('/','\'))
+    try { $full = [System.IO.Path]::GetFullPath($combined) } catch { return $null }
+
+    # A relative path that climbs out of the deploy root is broken by definition
+    # - this is the check that catches a wrong ../ depth.
+    if (-not $full.StartsWith($Deploy, [StringComparison]::OrdinalIgnoreCase)) { return $null }
+
+    if (Test-Path $full -PathType Leaf) { return $full }
+    $idx = Join-Path $full "index.html"
     if (Test-Path $idx -PathType Leaf) { return $idx }
     return $null
 }
@@ -97,7 +111,7 @@ else { Good "all titles unique" }
 
 # --------------------------------------------------- 3. Internal links
 Write-Host "`n=== 3. Internal links ===" -ForegroundColor Cyan
-$brokenLinks = @{}; $htmlLinks = @{}; $totalLinks = 0
+$brokenLinks = @{}; $htmlLinks = @{}; $absLinks = @{}; $totalLinks = 0
 foreach ($f in $pages) {
     $u = Get-Url $f
     $h = Get-Content $f.FullName -Raw
@@ -106,8 +120,9 @@ foreach ($f in $pages) {
         if ($v -match '^(https?:|mailto:|tel:|#|javascript:|data:|//)' -or $v -eq "") { continue }
         if ($v -match '\.(css|js|png|jpe?g|svg|webp|ico|woff2?|json|xml|txt)$') { continue }
         $totalLinks++
+        if ($v -match '^/') { if (-not $absLinks[$v]) { $absLinks[$v]=@() }; $absLinks[$v]+=$u }
         if ($v -match '\.html($|[?#])') { if (-not $htmlLinks[$v]) { $htmlLinks[$v]=@() }; $htmlLinks[$v]+=$u }
-        if (-not (Resolve-LocalPath $v)) { if (-not $brokenLinks[$v]) { $brokenLinks[$v]=@() }; $brokenLinks[$v]+=$u }
+        if (-not (Resolve-LocalPath $v $f.Directory.FullName)) { if (-not $brokenLinks[$v]) { $brokenLinks[$v]=@() }; $brokenLinks[$v]+=$u }
     }
 }
 Write-Host "  scanned $totalLinks internal page links"
@@ -119,10 +134,12 @@ if ($brokenLinks.Count) {
 if ($htmlLinks.Count) {
     foreach ($b in $htmlLinks.GetEnumerator()) { Warn ".html link '$($b.Key)' would cause a 301 hop ($(($b.Value|Select-Object -Unique).Count) pages)" }
 } else { Good "0 .html links (no avoidable redirect hops)" }
+if ($absLinks.Count) { foreach ($b in $absLinks.GetEnumerator()) { Bad "root-relative link '$($b.Key)' on $(($b.Value|Select-Object -Unique).Count) page(s) - would break in a subfolder" } }
+else { Good "all internal links are portable (document-relative)" }
 
 # ----------------------------------------------------- 4. Critical assets
 Write-Host "`n=== 4. Assets ===" -ForegroundColor Cyan
-$brokenAssets = @{}; $relAssets = @{}; $assetCount = 0
+$brokenAssets = @{}; $absAssets = @{}; $assetCount = 0
 foreach ($f in $pages) {
     $u = Get-Url $f
     $h = Get-Content $f.FullName -Raw
@@ -130,14 +147,24 @@ foreach ($f in $pages) {
         $v = $m.Groups[1].Value.Trim()
         if ($v -match '^(https?:|data:|//)') { continue }
         $assetCount++
-        if ($v -notmatch '^/') { if (-not $relAssets[$v]) { $relAssets[$v]=@() }; $relAssets[$v]+=$u; continue }
         if ($v -match '^/wp-content/uploads/') { continue }   # supplied at upload time
-        if (-not (Resolve-LocalPath $v)) { if (-not $brokenAssets[$v]) { $brokenAssets[$v]=@() }; $brokenAssets[$v]+=$u }
+        if ($v -match '^/') { if (-not $absAssets[$v]) { $absAssets[$v]=@() }; $absAssets[$v]+=$u }
+        if (-not (Resolve-LocalPath $v $f.Directory.FullName)) { if (-not $brokenAssets[$v]) { $brokenAssets[$v]=@() }; $brokenAssets[$v]+=$u }
+    }
+    # CSS url() in inline styles - these carry the page banners and are easy to
+    # miss: they are not src=/href= and four filenames contain parentheses.
+    foreach ($m in [regex]::Matches($h,'(?i)url\(\s*(["''])([^"'']*)\1\s*\)')) {
+        $v = $m.Groups[2].Value.Trim()
+        if ($v -match '^(https?:|data:|//)') { continue }
+        $assetCount++
+        if ($v -match '^/wp-content/uploads/') { continue }
+        if ($v -match '^/') { if (-not $absAssets[$v]) { $absAssets[$v]=@() }; $absAssets[$v]+=$u }
+        if (-not (Resolve-LocalPath $v $f.Directory.FullName)) { if (-not $brokenAssets[$v]) { $brokenAssets[$v]=@() }; $brokenAssets[$v]+=$u }
     }
 }
 Write-Host "  scanned $assetCount asset references"
-if ($relAssets.Count) { foreach ($r in $relAssets.GetEnumerator()) { Bad "document-relative asset '$($r.Key)' on $(($r.Value|Select-Object -Unique).Count) page(s)" } }
-else { Good "all asset paths are root-relative" }
+if ($absAssets.Count) { foreach ($r in $absAssets.GetEnumerator()) { Bad "root-relative asset '$($r.Key)' on $(($r.Value|Select-Object -Unique).Count) page(s) - would break in a subfolder" } }
+else { Good "all asset paths are portable (document-relative)" }
 if ($brokenAssets.Count) {
     foreach ($b in ($brokenAssets.GetEnumerator() | Sort-Object {$_.Value.Count} -Descending | Select-Object -First 15)) {
         Bad "missing asset '$($b.Key)' on $(($b.Value|Select-Object -Unique).Count) page(s)"
