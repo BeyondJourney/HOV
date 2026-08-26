@@ -2232,3 +2232,27 @@ body .sec-title {
         padding-left: 1.5rem !important;
     }
 }
+
+
+/* ==========================================================================
+   29. DROPDOWN PARENTS THAT ARE TRIGGERS, NOT LINKS
+   --------------------------------------------------------------------------
+   The Locations item carried href="our-services.html", so clicking the word
+   navigated to Our Services instead of doing nothing. The href is gone from
+   the markup, which is the whole fix - the dropdown itself never depended on
+   it:
+
+     desktop  .main-menu ul li:hover > ul.sub-menu  opens on hover, in CSS
+     mobile   main.js binds .th-item-has-children > a and already calls
+              preventDefault(), so the tap toggled the panel rather than
+              following the link
+
+   An <a> with no href drops to the browser's default text cursor, which would
+   be a visible change on hover. The pointer is restored here so the item looks
+   and feels exactly as it did. Scoped with :not([href]) so every real link in
+   the menus is untouched. */
+
+body .main-menu ul li.menu-item-has-children > a:not([href]),
+body .th-mobile-menu ul li.menu-item-has-children > a:not([href]) {
+    cursor: pointer;
+}
