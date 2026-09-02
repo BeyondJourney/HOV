@@ -2256,3 +2256,336 @@ body .main-menu ul li.menu-item-has-children > a:not([href]),
 body .th-mobile-menu ul li.menu-item-has-children > a:not([href]) {
     cursor: pointer;
 }
+
+
+/* ==========================================================================
+   30. LEGAL / POLICY PAGES
+   --------------------------------------------------------------------------
+   Shared by pricing, refund-policy, terms-and-conditions and privacy-policy.
+   One rule set here rather than four inline <style> blocks, which is how the
+   drift documented in section 6 started in the first place.
+
+   These are long-form reading pages, so the measure is capped in ch: the
+   container is wide enough for the site's section rhythm, but a line of body
+   copy stops at a comfortable length instead of running the full width on a
+   1920px monitor. Everything else inherits the shared type scale and colour
+   tokens from section 2, so the pages match the rest of the site without
+   restating a single font or colour.
+   ========================================================================== */
+
+body .hov-legal {
+    padding: var(--hov-section-space) 0;
+    background: #fff;
+}
+
+body .hov-legal > .container > * {
+    max-width: 78ch;
+}
+
+body .hov-legal h2 {
+    font-size: var(--hov-fs-h4) !important;
+    line-height: var(--hov-lh-heading) !important;
+    color: var(--hov-heading-color) !important;
+    font-weight: 700;
+    margin: 36px 0 12px;
+}
+
+body .hov-legal h2:first-of-type {
+    margin-top: 8px;
+}
+
+body .hov-legal p,
+body .hov-legal li {
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+body .hov-legal p {
+    margin: 0 0 16px;
+}
+
+body .hov-legal ul {
+    margin: 0 0 18px;
+    padding-left: 22px;
+}
+
+body .hov-legal li {
+    margin-bottom: 8px;
+}
+
+body .hov-legal a {
+    color: var(--theme-color);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+body .hov-legal a:hover {
+    color: var(--hov-teal);
+}
+
+/* The "last updated" line doubles as the rule under the page opening. */
+body .hov-legal-updated {
+    font-size: var(--hov-fs-small) !important;
+    color: #7b8794 !important;
+    margin: 0 0 28px !important;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e3e9f2;
+}
+
+/* Callout for the "the booking confirmation governs" style note. */
+body .hov-legal-note {
+    padding: 18px 22px;
+    margin: 0 0 26px;
+    border-left: 3px solid var(--hov-teal);
+    border-radius: 0 10px 10px 0;
+    background: #f5f9fd;
+    font-size: var(--hov-fs-body);
+    line-height: var(--hov-lh-body);
+    color: var(--hov-body-color);
+}
+
+/* Tables scroll inside their own box so a narrow phone never makes the page
+   itself scroll sideways. */
+body .hov-legal-tablewrap {
+    overflow-x: auto;
+    margin: 0 0 20px;
+    -webkit-overflow-scrolling: touch;
+}
+
+body .hov-legal table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 420px;
+    font-size: var(--hov-fs-small);
+}
+
+body .hov-legal th,
+body .hov-legal td {
+    border: 1px solid #e3e9f2;
+    padding: 10px 14px;
+    text-align: left;
+    line-height: 1.6;
+    color: var(--hov-body-color);
+}
+
+body .hov-legal th {
+    background: #f2f7fb;
+    color: var(--hov-heading-color);
+    font-weight: 600;
+}
+
+body .hov-legal-related {
+    margin-top: 28px !important;
+    padding-top: 18px;
+    border-top: 1px solid #e3e9f2;
+}
+
+body .hov-legal-cta {
+    margin-top: 26px !important;
+}
+
+body .hov-legal-cta a {
+    text-decoration: none;
+}
+
+
+/* ==========================================================================
+   31. FOOTER — the shared copy
+   --------------------------------------------------------------------------
+   The footer's own styling has always lived in a <style> block in the body of
+   each page, immediately above <footer>. That is fine for the pages that were
+   hand-built with it, but a page created from the footer markup alone gets the
+   markup with no styling at all — which is exactly what happened to the four
+   policy pages: correct footer, no dark panel, no columns.
+
+   The block is reproduced once here so any page carrying the markup is styled,
+   including future ones.
+
+   IMPORTANT — why these selectors are NOT prefixed with `body`:
+   this file is linked in <head>, so it is earlier in the cascade than the
+   twenty-two inline copies, which sit in <body>. At equal specificity the
+   later rule wins, so those pages keep using their own copy exactly as before
+   and nothing about them changes. Adding `body ` here would raise specificity
+   above the inline copies and silently take over all twenty-two footers, which
+   is the opposite of what is wanted. Keep these selectors flat.
+
+   .social-icons is deliberately omitted: section 26 already standardises the
+   footer icons for every page with !important, and repeating the old
+   rgba(255,255,255,.08) treatment here would only be dead weight.
+   ========================================================================== */
+
+/* The inline copies carry this as `footer { margin-top: 80px !important }`.
+   Matched here so the four policy pages sit the same distance clear of their
+   last section; on the other twenty-two the inline rule is later in the
+   cascade and resolves to the identical value, so nothing moves. */
+footer {
+    margin-top: 80px;
+}
+
+.hov-footer {
+    background: #0A2740;
+    color: #fff;
+    padding: 70px 0 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1250px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr 1.4fr;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+.footer-logo {
+    width: 180px;
+    margin-bottom: 20px;
+}
+
+.footer-box p {
+    color: #d7d7d7;
+    line-height: 2;
+    font-size: 15px;
+    max-width: 340px;
+}
+
+.footer-box h3 {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.footer-box h3::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 50px;
+    height: 3px;
+    background: #1abbec;
+}
+
+.footer-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-box ul li {
+    margin-bottom: 14px;
+    color: #d7d7d7;
+}
+
+.footer-box ul li a {
+    color: #d7d7d7;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.footer-box ul li a:hover {
+    color: #1abbec;
+    padding-left: 8px;
+}
+
+.footer-box i {
+    color: #1abbec;
+    margin-right: 10px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.contact-item i {
+    color: #1abbec;
+    font-size: 18px;
+    width: 20px;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.contact-item p {
+    margin: 0;
+    color: #d7d7d7;
+    line-height: 1.8;
+}
+
+.contact-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-item a {
+    color: #d7d7d7;
+    text-decoration: none;
+    line-height: 1.8;
+}
+
+.contact-item a:hover {
+    color: #1abbec;
+}
+
+.footer-bottom {
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 20px 40px;
+}
+
+.footer-bottom-content {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 70px;
+}
+
+.footer-bottom p {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #0A2740;
+    width: max-content;
+}
+
+.footer-right-logos {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-right-logos img {
+    height: 75px;
+    width: auto;
+}
+
+@media (max-width: 992px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 45px;
+        text-align: center;
+    }
+
+    .footer-box p {
+        max-width: 100%;
+    }
+
+    .footer-box h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .contact-item {
+        justify-content: center;
+        text-align: left;
+    }
+}

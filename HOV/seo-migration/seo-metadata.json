@@ -124,5 +124,29 @@
         "Source":  "AUDIT-VERBATIM (pre-migration snapshot)",
         "Title":  "Corporate Event Planners In Pune | event planning in pune",
         "Description":  "Welcome to HOV, your Trusted Corporate MICE Event Planners in Pune, offering end-to-end solutions for corporate travel, events, and incentive tours | Contact us"
+    },
+    {
+        "Url":  "/pricing/",
+        "Source":  "CREATED 2026-09-02 - new page, values taken from the source page head",
+        "Title":  "Pricing | House of Vacation",
+        "Description":  "How House of Vacation prices corporate travel, MICE and group programmes, what a written quotation covers, and how to request one."
+    },
+    {
+        "Url":  "/refund-policy/",
+        "Source":  "CREATED 2026-09-02 - new page, values taken from the source page head",
+        "Title":  "Refund & Cancellation Policy | House of Vacation",
+        "Description":  "How cancellations and refunds are handled for corporate travel, MICE and group bookings arranged by House of Vacation India Pvt Ltd."
+    },
+    {
+        "Url":  "/terms-and-conditions/",
+        "Source":  "CREATED 2026-09-02 - new page, values taken from the source page head",
+        "Title":  "Terms & Conditions | House of Vacation",
+        "Description":  "The terms governing use of the House of Vacation website and any enquiry submitted through it, including quotations, suppliers and liability."
+    },
+    {
+        "Url":  "/privacy-policy/",
+        "Source":  "CREATED 2026-09-02 - new page, values taken from the source page head",
+        "Title":  "Privacy Policy | House of Vacation",
+        "Description":  "How House of Vacation India Pvt Ltd collects, uses and protects your personal data, including analytics and advertising cookies."
     }
 ]

@@ -70,6 +70,15 @@ $PageMap = [ordered]@{
     "corporate-travel-agency-in-mumbai.html"    = "corporate-travel-agency-in-mumbai"
     "corporate-travel-agency-in-bangalore.html" = "corporate-travel-agency-in-bangalore"
     "corporate-event-planners-in-pune.html"     = "corporate-event-planners-in-pune"
+
+    # Legal / commercial pages. Real source pages since 2026-09-02; they replaced
+    # the standalone legal-privacy.html / legal-terms.html stubs that used to be
+    # copied in verbatim, so they now go through the same menu, link, asset and
+    # SEO pipeline as every other page.
+    "pricing.html"                      = "pricing"
+    "refund-policy.html"                = "refund-policy"
+    "terms-and-conditions.html"         = "terms-and-conditions"
+    "privacy-policy.html"               = "privacy-policy"
 }
 
 $Excluded = @("error.html")
@@ -107,6 +116,10 @@ $LinkMap = @{
     "corporate-travel-agency-in-mumbai.html"    = "/corporate-travel-agency-in-mumbai/"
     "corporate-travel-agency-in-bangalore.html" = "/corporate-travel-agency-in-bangalore/"
     "corporate-event-planners-in-pune.html"     = "/corporate-event-planners-in-pune/"
+    "pricing.html"                      = "/pricing/"
+    "refund-policy.html"                = "/refund-policy/"
+    "terms-and-conditions.html"         = "/terms-and-conditions/"
+    "privacy-policy.html"               = "/privacy-policy/"
 
     # Excluded pages
     "my-account.html"                   = "/"
@@ -422,15 +435,14 @@ if (Test-Path $ty) {
 }
 
 # ===========================================================================
-Write-Host "`n=== 6. Legal pages ===" -ForegroundColor Cyan
-$legal = @{ "legal-privacy.html" = "privacy-policy"; "legal-terms.html" = "terms-and-conditions" }
-foreach ($src in $legal.Keys) {
-    $s = Join-Path $Kit "deploy\$src"
-    if (-not (Test-Path $s)) { continue }
-    $dir = Join-Path $Deploy $legal[$src]
-    New-Item -ItemType Directory -Force -Path $dir | Out-Null
-    Copy-Item $s (Join-Path $dir "index.html") -Force
-    Write-Host "  /$($legal[$src])/" -ForegroundColor Gray
+# This step used to copy deploy/legal-privacy.html and deploy/legal-terms.html
+# to /privacy-policy/ and /terms-and-conditions/. Those URLs, plus /pricing/
+# and /refund-policy/, are now built by the page loop in step 1 from the real
+# source pages, so the stubs were removed and this only reports on the result.
+Write-Host "`n=== 6. Legal pages (built from source in step 1) ===" -ForegroundColor Cyan
+foreach ($slug in @("pricing","refund-policy","terms-and-conditions","privacy-policy")) {
+    if (Test-Path (Join-Path $Deploy "$slug\index.html")) { Write-Host ("  /{0}/" -f $slug) -ForegroundColor Gray }
+    else { Write-Host ("  MISSING /{0}/" -f $slug) -ForegroundColor Red }
 }
 
 # Root favicon - the live site returns 404 for /favicon.ico today.
