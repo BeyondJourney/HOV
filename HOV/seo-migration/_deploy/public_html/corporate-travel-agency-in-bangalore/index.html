@@ -592,27 +592,43 @@
             margin-right: 10px;
         }
 
-        .social-icons {
+        .hov-footer .social-icons {
             margin-top: 30px;
+            /* The footer panel has no bottom padding, so wherever this column is
+               the tallest the icons ended up flush against the white bar. 20px
+               gives them the same clearance they have on the contact page. */
+            margin-bottom: 20px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
 
-        .social-icons a {
+        .hov-footer .social-icons a {
             width: 45px;
             height: 45px;
-            background: rgba(255, 255, 255, .08);
-            display: flex;
+            flex: 0 0 45px;
+            background: #f3f3f3;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            color: #1abbec;
+            color: #0bb5b8;
+            font-size: 16px;
+            line-height: 1;
             text-decoration: none;
-            transition: .3s;
+            transition: background-color .3s ease, color .3s ease, transform .3s ease;
         }
 
-        .social-icons a:hover {
-            background: #1abbec;
+        /* .footer-box i adds a 10px right margin for the contact rows; inside a
+           round social button it pushes the glyph off centre. */
+        .hov-footer .social-icons a i {
+            margin: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        .hov-footer .social-icons a:hover,
+        .hov-footer .social-icons a:focus-visible {
+            background: #0bb5b8;
             color: #fff;
             transform: translateY(-5px);
         }
@@ -674,8 +690,11 @@
                 transform: translateX(-50%);
             }
 
-            .social-icons {
+            .hov-footer .social-icons {
                 justify-content: center;
+                /* one column now: the icons are followed by Quick Links, not by the
+                   edge of the panel, so the clearance above is not wanted here. */
+                margin-bottom: 0;
             }
 
             .contact-item {

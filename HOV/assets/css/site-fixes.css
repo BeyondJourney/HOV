@@ -2088,6 +2088,11 @@ body .hov-footer .social-icons {
     display: flex !important;
     gap: 15px !important;
     margin-top: 30px !important;
+    /* .hov-footer carries no bottom padding, so on every page where this
+       column runs longest the icons finished flush against the white bar
+       below. This is the clearance the contact page had by accident, its
+       address column being the longer one; here every page gets it. */
+    margin-bottom: 20px !important;
 }
 
 body .hov-footer .social-icons a {
@@ -2125,9 +2130,17 @@ body .hov-footer .social-icons a i {
     font-size: inherit !important;
 }
 
-@media (max-width: 767.98px) {
+/* 992px, not 767.98px: at that width .footer-container collapses to one
+   centred column, and the twenty-two pages that carry their own footer CSS
+   centre the icons from there too. The four policy pages have no inline copy,
+   so without this they were the only footers leaving the icons hard left on a
+   tablet while the text above them was centred. */
+@media (max-width: 992px) {
     body .hov-footer .social-icons {
         justify-content: center !important;
+        /* one column: Quick Links follows the icons rather than the edge
+           of the panel, so the desktop clearance is not wanted. */
+        margin-bottom: 0 !important;
     }
 }
 
@@ -2587,5 +2600,47 @@ footer {
     .contact-item {
         justify-content: center;
         text-align: left;
+    }
+}
+
+
+/* ==========================================================================
+   32. ESTABLISHED LINE (about page)
+   --------------------------------------------------------------------------
+   The Welcome block already carries an eyebrow above its H2, so the founding
+   year goes below the heading rather than competing with either for the same
+   slot. It is sized between the body text and the eyebrow and set in the
+   brand teal, with the same short rule the section headings use as their
+   underline, so it reads as a credential and not as a second title.
+   ========================================================================== */
+
+body .hov-established {
+    /* block-level flex, not inline-flex: an inline-level box ignores vertical
+       margins, so the gap under the H2 could not be controlled. */
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    color: var(--hov-teal);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    line-height: 1.4;
+}
+
+body .hov-established::before {
+    content: "";
+    flex: 0 0 26px;
+    height: 2px;
+    background: var(--hov-teal);
+}
+
+@media (max-width: 767.98px) {
+    body .hov-established {
+        font-size: 14px;
+        margin-bottom: 16px;
     }
 }

@@ -509,6 +509,7 @@ About Area
                             <span class="sub-title style1 ">Welcome To House of Vacation</span>
                             <h2 class="sec-title mb-20 heading">Your Trusted MICE Travel Partner
                             </h2>
+                            <p class="hov-established">Established in 2017</p>
                         </div>
                         <p class="pe-xl-5">Welcome to <b>House of Vacation</b>, your trusted <b> MICE Company in India</b>, specializing in MICE ( Meetings, Incentives, Conferences, Exhibitions) and corporate travel. We are dedicated to delivering exceptional <b>Business Travel Services</b> that cater to your organization’s unique needs. As a leading <b>Corporate Travel Partner</b>, we ensure seamless planning and execution of <b>MICE</b>, both domestically and internationally.
 
@@ -1165,7 +1166,7 @@ height:280px;
                 </div>
             </div>
                         <div class="member-card">
-                <img loading="lazy" decoding="async" src="assets/img/Amit Tyagi.jpg" alt="Amit Tyagi - House of Vacation" width="240" height="190">
+                <img loading="lazy" decoding="async" src="assets/img/Amit Tyagi (1).png" alt="Amit Tyagi - House of Vacation" width="240" height="190">
                 <div class="member-info">
                     <h4>Amit Tyagi</h4>
                     <span>MICE Head </span>
@@ -1638,13 +1639,106 @@ height:280px;
 }
 
 /* Country heading ke upar extra gap remove */
-.tour-experience + .tour-experience {
-    margin-top: 0 !important;
-}
-
 /* Gallery ke baad unnecessary gap remove */
 .tour-gallery {
     margin-bottom: 10px !important;
+}
+
+/* ---------------------------------------------------------
+   EVENT NAME + SUPPORTING LINE
+   ---------------------------------------------------------
+   Three steps down from the destination, which stays the
+   strongest thing in the row:
+
+     h3           30px / 600  #163B5B   (25px on a phone)
+     .tour-event  18px / 600  #163B5B   (16px on a phone)
+     .tour-note   15px / 400  #6c7883   (14px on a phone)
+
+   Both lines are still .tour-title-row p, so they keep the
+   centring and the 900px cap the section already declared;
+   only size, weight and colour separate the two. The .tour-event
+   rules are one class more specific than the page's own
+   @media (max-width: 600px) .tour-title-row p, so each is
+   restated there rather than left to be overridden.
+   --------------------------------------------------------- */
+
+.tour-title-row p {
+    margin-top: 8px !important;
+}
+
+.tour-title-row .tour-event {
+    margin-top: 10px !important;
+    color: #163B5B;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: .2px;
+}
+
+.tour-title-row .tour-note {
+    margin-top: 6px !important;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .tour-title-row .tour-event {
+        font-size: 16px;
+    }
+
+    .tour-title-row .tour-note {
+        font-size: 14px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   ONE GAP BETWEEN DESTINATIONS
+   ---------------------------------------------------------
+   The destination blocks are not reliably siblings. MALAYSIA
+   sits inside THAILAND's .tour-experience on index.html and
+   about.html, and on our-services.html THAILAND has no
+   .tour-experience wrapper at all, so a margin on that class
+   alone could never space them evenly: the gaps measured
+   44px, 34px and 10px on one page.
+
+   Every pairing that can begin a new destination is given the
+   same top margin instead. Adjacent vertical margins collapse
+   to the larger of the two, so whatever each block already
+   carries below it, the gap resolves to exactly this value.
+
+   .vietnam-tour's padding-top is cleared for the same reason:
+   padding does not collapse, so it was adding 10px on top of
+   the gap above VIETNAM and nowhere else.
+   --------------------------------------------------------- */
+
+.vietnam-tour {
+    padding-top: 0 !important;
+}
+
+.tour-experience + .tour-experience,
+.tour-experience + .tour-title-row,
+.tour-gallery + .tour-experience,
+.tour-gallery + .tour-title-row {
+    margin-top: 64px !important;
+}
+
+@media (max-width: 991px) {
+    .tour-experience + .tour-experience,
+    .tour-experience + .tour-title-row,
+    .tour-gallery + .tour-experience,
+    .tour-gallery + .tour-title-row {
+        margin-top: 52px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .tour-experience + .tour-experience,
+    .tour-experience + .tour-title-row,
+    .tour-gallery + .tour-experience,
+    .tour-gallery + .tour-title-row {
+        margin-top: 48px !important;
+    }
 }
 
 
@@ -1686,6 +1780,8 @@ height:280px;
                     <h3>
                         <b>GUWAHATI</b> 
                     </h3>
+                    <p class="tour-event">Higher Management Conference</p>
+                    <p class="tour-note">120 Pax of senior leadership, one agenda, and straight talk that moved the business forward.</p>
 
                     
                 </div>
@@ -1777,6 +1873,8 @@ height:280px;
                     <h3>
                        <b>VIETNAM</b> 
                     </h3>
+                    <p class="tour-event">Incentive Tour</p>
+                    <p class="tour-note">The reward for a year well delivered &mdash; Vietnam, shared by 120 Pax who made it happen.</p>
 
                     
                 </div>
@@ -1851,10 +1949,85 @@ height:280px;
 
             <div class="tour-title-row">
                 <div>
+                    <h3><b>DELHI</b></h3>
+                    <p class="tour-event">Reward &amp; Recognition Celebration</p>
+                    <p class="tour-note">250 Pax, one stage, and a night that belonged entirely to the people being applauded.</p>
+                </div>
+            </div>
+            <div class="tour-gallery">
+
+                <div class="gallery-item large">
+                    <img loading="lazy" decoding="async" src="assets/img/Delhi.png"
+                         alt="HOV Delhi Group Tour" width="680" height="477">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 1.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 5.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 3.png"
+                         alt="HOV Delhi Group Tour" width="336" height="229">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 4.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 2.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 6.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 7.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+                
+<div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 8.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 9.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 10.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 11.png"
+                         alt="HOV Delhi Group Tour" width="336" height="229">
+                </div>
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/delhi 12.png"
+                         alt="HOV Delhi Group Tour" width="295" height="230">
+                </div>
+
+            </div>
+        <div class="tour-experience">
+
+            <div class="tour-title-row">
+                <div>
 
                     <h3>
                         <b>THAILAND</b> 
                     </h3>
+                    <p class="tour-event">Incentive Tour</p>
+                    <p class="tour-note">2500 Pax. One destination. One celebration &mdash; incentive travel at its boldest scale.</p>
 
                     
                 </div>
@@ -1866,42 +2039,42 @@ height:280px;
 
                 <div class="gallery-item large">
                     <img loading="lazy" decoding="async" src="assets/img/Thailand.jpg"
-                         alt="HOV Guwahati Group Tour" width="680" height="477">
+                         alt="HOV Thailand Group Tour" width="680" height="477">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 1.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 2.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 3.jpg"
-                         alt="HOV Guwahati Group Tour" width="336" height="229">
+                         alt="HOV Thailand Group Tour" width="336" height="229">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 4.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 5.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 6.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
 
                 <div class="gallery-item">
                     <img loading="lazy" decoding="async" src="assets/img/thailand 7.jpg"
-                         alt="HOV Guwahati Group Tour" width="295" height="230">
+                         alt="HOV Thailand Group Tour" width="295" height="230">
                 </div>
                 
 <div class="gallery-item">
@@ -1927,6 +2100,69 @@ height:280px;
 
 
             </div>
+<div class="tour-experience">
+
+            <div class="tour-title-row">
+                <div>
+                    <h3><b>MALAYSIA</b></h3>
+                    <p class="tour-event">Incentive Tour</p>
+                    <p class="tour-note">A change of pace for 200 Pax, and stories that outlast the trip itself.</p>
+                </div>
+            </div>
+
+            <!-- Malaysia Gallery -->
+
+            <div class="tour-gallery">
+
+                <div class="gallery-item large">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia.png"
+                         alt="HOV Malaysia Group Tour" width="680" height="477">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 1.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 2.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 3.png"
+                         alt="HOV Malaysia Group Tour" width="336" height="229">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 4.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 5.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 6.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+
+                <div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 7.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+                
+<div class="gallery-item">
+                    <img loading="lazy" decoding="async" src="assets/img/Malaysia 8.png"
+                         alt="HOV Malaysia Group Tour" width="295" height="230">
+                </div>
+                
+
+        
+
+        </div>
 
         </div>
 
@@ -2521,27 +2757,43 @@ Testimonial Area
             margin-right: 10px;
         }
 
-        .social-icons {
+        .hov-footer .social-icons {
             margin-top: 30px;
+            /* The footer panel has no bottom padding, so wherever this column is
+               the tallest the icons ended up flush against the white bar. 20px
+               gives them the same clearance they have on the contact page. */
+            margin-bottom: 20px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
 
-        .social-icons a {
+        .hov-footer .social-icons a {
             width: 45px;
             height: 45px;
-            background: rgba(255, 255, 255, .08);
-            display: flex;
+            flex: 0 0 45px;
+            background: #f3f3f3;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            color: #1abbec;
+            color: #0bb5b8;
+            font-size: 16px;
+            line-height: 1;
             text-decoration: none;
-            transition: .3s;
+            transition: background-color .3s ease, color .3s ease, transform .3s ease;
         }
 
-        .social-icons a:hover {
-            background: #1abbec;
+        /* .footer-box i adds a 10px right margin for the contact rows; inside a
+           round social button it pushes the glyph off centre. */
+        .hov-footer .social-icons a i {
+            margin: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        .hov-footer .social-icons a:hover,
+        .hov-footer .social-icons a:focus-visible {
+            background: #0bb5b8;
             color: #fff;
             transform: translateY(-5px);
         }
@@ -2603,8 +2855,11 @@ Testimonial Area
                 transform: translateX(-50%);
             }
 
-            .social-icons {
+            .hov-footer .social-icons {
                 justify-content: center;
+                /* one column now: the icons are followed by Quick Links, not by the
+                   edge of the panel, so the clearance above is not wanted here. */
+                margin-bottom: 0;
             }
 
             .contact-item {
