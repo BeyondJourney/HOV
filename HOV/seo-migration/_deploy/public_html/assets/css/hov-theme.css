@@ -1235,6 +1235,42 @@ body .hov-icard p {
     margin: 0;
 }
 
+/* phones: one column, icon beside the text, so eight cards stay short */
+@media (max-width: 575.98px) {
+    body .hov-grid:has(> .hov-icard) {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    body .hov-icard {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        column-gap: 14px;
+        align-items: start;
+        padding: 14px 16px;
+    }
+
+    body .hov-icard-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        font-size: 17px;
+        margin: 0;
+        grid-row: 1 / span 2;
+    }
+
+    body .hov-icard h3,
+    body .hov-icard h4 {
+        font-size: 16px;
+        margin-bottom: 3px;
+    }
+
+    body .hov-icard p {
+        font-size: 14px;
+        line-height: 1.55;
+    }
+}
+
 /* ---- 8d. Check list ----------------------------------------------------- */
 body .hov-checks {
     list-style: none;
@@ -1610,7 +1646,7 @@ body .hov-plan-note a {
     body .hov-hero-inner {
         grid-template-columns: minmax(0, 1fr);
         padding-top: calc(var(--hov-header-h) + 34px);
-        padding-bottom: 70px;
+        padding-bottom: 104px; /* room for the pagination bars above the plan card */
     }
 
     body .hov-hero-bg::after {
@@ -1622,8 +1658,9 @@ body .hov-plan-note a {
         display: none;
     }
 
+    /* the plan card overlaps the slider's bottom 44px, so the bars sit above it */
     body .hov-hero-pagination {
-        bottom: 22px !important;
+        bottom: 62px !important;
         justify-content: flex-start;
         padding: 0 var(--hov-gutter);
     }
@@ -1654,7 +1691,7 @@ body .hov-plan-note a {
 
     body .hov-hero-inner {
         padding-top: calc(var(--hov-header-h) + 28px);
-        padding-bottom: 72px;
+        padding-bottom: 104px;
     }
 
     body .hov-hero-title {
@@ -2308,127 +2345,212 @@ body .hov-logos .brand-box:hover img {
 
 /* ==========================================================================
    13. SERVICE PAGES (service-detail / hov-travel-service / hov-content)
+   --------------------------------------------------------------------------
+   The ten service pages used to carry a 3.7 KB inline stylesheet each and
+   repeated their main heading twice. transform-services.ps1 (2026-10) removed
+   the stylesheet and gave every page this structure:
+
+     .service-detail
+        .hov-svc-overview   .service-heading (eyebrow, h2, intro, actions)
+                            + .content-right (photo)
+        .service-content    .content-left (optional h3 + long-form copy)
+     .hov-travel-service    .container.hov-svc-split
+                              .hov-svc-text (h2, p)  |  aside (h4 + check-list)
+     .hov-content           .hov-block.hov-svc-split  (same split)
+
+   site-fixes.css §5 still sets the base type; this block owns the layout.
    ========================================================================== */
 
 body section.service-detail {
-    padding-top: 56px !important;
-    padding-bottom: 24px !important;
+    padding-top: 52px !important;
+    padding-bottom: 8px !important;
+}
+
+/* overview: text left, photo right */
+body .hov-svc-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+    gap: 40px 56px;
+    align-items: center;
 }
 
 body .service-detail .service-heading {
-    max-width: 860px;
-    margin: 0 auto 40px !important;
+    text-align: left;
+    max-width: none;
+    margin: 0 !important;
+}
+
+body .service-detail .service-heading .hov-eyebrow {
+    margin-bottom: 12px;
 }
 
 body .service-detail .service-heading h2 {
     font-family: var(--hov-display-font) !important;
-    font-size: clamp(26px, 3.2vw, 40px) !important;
+    font-size: clamp(27px, 3vw, 40px) !important;
     letter-spacing: -.01em;
+    margin-bottom: 16px !important;
     text-wrap: balance;
 }
 
 body .service-detail .service-heading p {
     font-size: 16.5px !important;
-    text-align: center !important;
+    line-height: 1.7 !important;
     color: var(--hov-body) !important;
-    margin: 0 auto 14px !important;
+    max-width: 60ch !important;
+    margin: 0 0 14px !important;
+    text-align: left !important;
 }
 
-@media (max-width: 767.98px) {
-    body .service-detail .service-heading p {
-        text-align: left !important;
-    }
-
-    body .breadcumb-menu {
-        padding: 6px 12px;
-        gap: 4px 8px;
-    }
-
-    body .breadcumb-menu li,
-    body .breadcumb-menu a,
-    body .breadcumb-menu span {
-        font-size: 12.5px !important;
-    }
-}
-
-body .service-detail .service-content {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
-    gap: 48px;
+body .hov-svc-actions {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding: 36px 0 20px;
-    border-top: 1px solid var(--hov-line);
+    gap: 14px 22px;
+    margin-top: 22px;
 }
 
-body .service-detail .content-left h3 {
-    font-family: var(--hov-display-font) !important;
-    font-size: clamp(22px, 2.3vw, 30px) !important;
-    letter-spacing: -.01em;
+body .hov-call-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15.5px;
+    color: var(--hov-navy);
+    text-decoration: none;
+    transition: color .2s ease;
 }
 
-body .service-detail .content-left p {
-    font-size: 16px !important;
+body .hov-call-link i {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 14px;
+}
+
+body .hov-call-link:hover,
+body .hov-call-link:focus-visible {
+    color: var(--hov-teal-dark);
 }
 
 body .service-detail .content-right img {
     width: 100%;
     height: auto;
-    aspect-ratio: 7 / 8;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
     border-radius: var(--hov-radius-lg);
     box-shadow: var(--hov-shadow);
     display: block;
 }
 
+/* the long-form copy under the overview flows in two columns */
+body .service-detail .service-content {
+    display: block !important;
+    margin-top: 40px;
+    padding: 32px 0 0;
+    border-top: 1px solid var(--hov-line);
+}
+
+body .service-detail .content-left {
+    columns: 2;
+    column-gap: 56px;
+}
+
+body .service-detail .content-left h3 {
+    column-span: all;
+    font-family: var(--hov-display-font) !important;
+    font-size: clamp(21px, 2.1vw, 27px) !important;
+    letter-spacing: -.01em;
+    margin-bottom: 14px !important;
+    max-width: 40ch;
+    text-wrap: balance;
+}
+
+body .service-detail .content-left p {
+    font-size: 15.5px !important;
+    line-height: 1.75 !important;
+    margin: 0 0 14px !important;
+}
+
+/* text | check-list sections */
 body section.hov-travel-service,
 body section.hov-content {
-    padding-top: 36px !important;
-    padding-bottom: 36px !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+}
+
+body section.service-detail + section.hov-travel-service {
+    padding-top: 44px !important;
 }
 
 body section.hov-travel-service + section.hov-travel-service {
     padding-top: 0 !important;
 }
 
+body .hov-svc-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    gap: 24px 56px;
+    align-items: start;
+}
+
+body .hov-block.hov-svc-split {
+    margin-bottom: 44px !important;
+}
+
+body .hov-block.hov-svc-split:last-child {
+    margin-bottom: 0 !important;
+}
+
 body .hov-travel-service h2,
 body .hov-block h2 {
     font-family: var(--hov-display-font) !important;
-    font-size: clamp(23px, 2.4vw, 32px) !important;
+    font-size: clamp(23px, 2.3vw, 31px) !important;
     letter-spacing: -.01em;
-    max-width: 30ch;
+    margin-bottom: 14px !important;
     text-wrap: balance;
 }
 
 body .hov-travel-service p,
 body .hov-block p {
-    max-width: 78ch;
+    font-size: 15.5px !important;
+    line-height: 1.75 !important;
+    margin: 0 0 14px !important;
+    max-width: 62ch;
+}
+
+body .hov-svc-text > p:last-child {
+    margin-bottom: 0 !important;
 }
 
 body .hov-travel-service h4,
 body .hov-block h4 {
-    font-size: 13px !important;
+    font-size: 12.5px !important;
     font-weight: 700 !important;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--hov-teal-dark) !important;
-    margin: 22px 0 14px !important;
+    margin: 6px 0 12px !important;
 }
 
-/* the two-column <ul> pairs become one check-list panel */
+/* the two <ul>s of each list merge into one check-list panel */
 body .service-list,
 body .hov-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 28px;
-    padding: 20px 22px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px 20px;
     border-radius: var(--hov-radius);
     background: var(--hov-bg-soft);
     border: 1px solid var(--hov-line);
-    max-width: 920px;
 }
 
 body .service-list ul,
 body .hov-list ul {
+    display: contents;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -2438,14 +2560,10 @@ body .service-list li,
 body .hov-list li {
     position: relative;
     padding-left: 30px;
-    margin-bottom: 10px !important;
-    line-height: 1.6 !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
     color: var(--hov-ink) !important;
-}
-
-body .service-list li:last-child,
-body .hov-list li:last-child {
-    margin-bottom: 0 !important;
 }
 
 body .service-list li::before,
@@ -2455,7 +2573,7 @@ body .hov-list li::before {
     font-weight: 900;
     position: absolute;
     left: 0;
-    top: 5px;
+    top: 3px;
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -2482,25 +2600,54 @@ body .hov-block {
 
 @media (max-width: 991.98px) {
     body section.service-detail {
-        padding-top: 36px !important;
+        padding-top: 34px !important;
     }
 
-    body .service-detail .service-heading {
-        margin-bottom: 24px !important;
-    }
-
-    body .service-detail .service-content {
+    body .hov-svc-overview {
         grid-template-columns: 1fr;
         gap: 22px;
-        padding-top: 24px;
     }
 
-    body .service-detail .content-right {
-        order: -1;
+    body .service-detail .service-heading h2 {
+        font-size: 26px !important;
+        margin-bottom: 12px !important;
+    }
+
+    body .service-detail .service-heading p {
+        font-size: 15.5px !important;
+        line-height: 1.65 !important;
+        max-width: none !important;
+        margin-bottom: 12px !important;
+    }
+
+    body .hov-svc-actions {
+        margin-top: 16px;
+        gap: 12px 18px;
     }
 
     body .service-detail .content-right img {
         aspect-ratio: 16 / 10;
+    }
+
+    body .service-detail .service-content {
+        margin-top: 26px;
+        padding-top: 22px;
+    }
+
+    body .service-detail .content-left {
+        columns: 1;
+    }
+
+    body .service-detail .content-left h3 {
+        font-size: 21px !important;
+    }
+
+    body .service-detail .content-left p,
+    body .hov-travel-service p,
+    body .hov-block p {
+        font-size: 15px !important;
+        line-height: 1.68 !important;
+        margin-bottom: 12px !important;
     }
 
     body section.hov-travel-service,
@@ -2509,18 +2656,60 @@ body .hov-block {
         padding-bottom: 26px !important;
     }
 
-    body .service-list,
-    body .hov-list {
-        grid-template-columns: 1fr;
-        gap: 4px;
-        padding: 16px 16px;
+    body section.service-detail + section.hov-travel-service {
+        padding-top: 30px !important;
     }
 
-    body .hov-block {
-        margin-bottom: 26px !important;
+    body .hov-svc-split {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    body .hov-block.hov-svc-split {
+        margin-bottom: 30px !important;
+    }
+
+    body .hov-travel-service h2,
+    body .hov-block h2 {
+        font-size: 22px !important;
+        margin-bottom: 10px !important;
+    }
+
+    body .hov-travel-service h4,
+    body .hov-block h4 {
+        margin: 4px 0 10px !important;
+    }
+
+    body .service-list,
+    body .hov-list {
+        padding: 14px 14px;
+        gap: 6px;
+    }
+
+    body .service-list li,
+    body .hov-list li {
+        font-size: 14.5px !important;
     }
 }
 
+@media (max-width: 767.98px) {
+    body .breadcumb-menu {
+        padding: 6px 12px;
+        gap: 4px 8px;
+    }
+
+    body .breadcumb-menu li,
+    body .breadcumb-menu a,
+    body .breadcumb-menu span {
+        font-size: 12.5px !important;
+    }
+
+    body .hov-svc-actions .th-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
 
 /* ==========================================================================
    14. ABOUT PAGE
@@ -3508,6 +3697,157 @@ body .hov-ft-bottom p {
 
     body .hov-ft-brand p {
         max-width: none;
+    }
+}
+
+/* Location pages end with their own city-specific CTA band, so the shared
+   footer band would repeat the same ask directly underneath it. */
+body main:has(.hov-city-cta) + footer .hov-ft-cta {
+    display: none;
+}
+
+/* ---- phones: tighter rhythm and collapsible link groups ------------------
+   hov-theme.js wraps the Services / Company / Legal headings in a button and
+   adds .hov-ft-acc to the footer below 768px; the contact list stays open. */
+body .hov-ft-toggle {
+    display: inline;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: default;
+}
+
+@media (max-width: 767.98px) {
+    body .hov-ft-cta-inner {
+        padding: 28px 0;
+        gap: 18px;
+    }
+
+    body .hov-ft-cta p {
+        font-size: 14.5px;
+        line-height: 1.6;
+    }
+
+    body .hov-ft-cta-actions {
+        gap: 12px 18px;
+    }
+
+    body .hov-ft-cta-actions .th-btn {
+        width: auto;
+    }
+
+    body .hov-ft-grid {
+        padding: 26px 0 6px;
+        gap: 22px 14px;
+    }
+
+    body .hov-ft-brand > a img {
+        height: 42px;
+        margin-bottom: 14px;
+    }
+
+    body .hov-ft-brand p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin-bottom: 16px;
+    }
+
+    body .hov-ft-social {
+        margin-bottom: 18px;
+    }
+
+    body .hov-ft-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+
+    body .hov-ft-badges span {
+        padding: 8px 10px;
+    }
+
+    body .hov-ft-brand .hov-ft-badges img {
+        height: 36px;
+    }
+
+    body .hov-ft-acc .hov-ft-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    body .hov-ft-acc .hov-ft-brand {
+        padding-bottom: 22px;
+    }
+
+    body .hov-ft-acc .hov-ft-col {
+        border-top: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    body .hov-ft-acc .hov-ft-col h3,
+    body .hov-ft-acc .hov-ft-col h3 + h3 {
+        margin: 0;
+    }
+
+    body .hov-ft-acc .hov-ft-col ul + h3 {
+        border-top: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    body .hov-ft-acc .hov-ft-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 15px 0;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    body .hov-ft-acc .hov-ft-toggle::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        margin: -4px 6px 0 0;
+        border-right: 2px solid #9fe8ea;
+        border-bottom: 2px solid #9fe8ea;
+        transform: rotate(45deg);
+        transition: transform .2s ease;
+    }
+
+    body .hov-ft-acc .hov-ft-toggle[aria-expanded="true"]::after {
+        margin-top: 4px;
+        transform: rotate(-135deg);
+    }
+
+    body .hov-ft-acc .hov-ft-col h3 + ul:not(.hov-ft-contact) {
+        display: none;
+        padding: 0 0 14px;
+    }
+
+    body .hov-ft-acc .hov-ft-col h3.is-open + ul {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2px 14px;
+    }
+
+    body .hov-ft-acc .hov-ft-col:last-child {
+        padding-top: 18px;
+    }
+
+    body .hov-ft-acc .hov-ft-col:last-child h3 {
+        margin: 0 0 12px;
+    }
+
+    body .hov-ft-acc .hov-ft-contact li {
+        margin-bottom: 10px;
+    }
+
+    body .hov-ft-bottom {
+        padding: 14px 0 18px;
+        font-size: 13px;
     }
 }
 

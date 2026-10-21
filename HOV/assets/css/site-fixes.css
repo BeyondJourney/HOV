@@ -1539,6 +1539,182 @@ body .hov-city-cta-actions {
     }
 }
 
+/* ---- compaction pass (2026-10) ------------------------------------------
+   Proposal button at the top, two-column grids for long cards and long lists,
+   "Label: text" bullets as definition cards, h3 + list pairs side by side,
+   and a tighter rhythm on phones. transform-city.ps1 added the classes. */
+body .hov-city-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 18px;
+    margin-top: 10px;
+}
+
+body .hov-city-actions .hov-city-call {
+    margin: 0;
+}
+
+body .hov-city-cards--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body .hov-city-body > .hov-city-list--2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 32px;
+    max-width: none;
+}
+
+body .hov-city-body > .hov-city-list--defs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 20px;
+    max-width: none;
+}
+
+body .hov-city-list--defs li {
+    margin: 0;
+    padding: 14px 18px 14px 38px;
+    background: #fff;
+    border: 1px solid #e3e9f2;
+    border-radius: 12px;
+}
+
+body .hov-city-list--defs li::before {
+    left: 18px;
+    top: 22px;
+}
+
+body .hov-city-list--defs li strong {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 600;
+    color: var(--hov-heading-color);
+}
+
+body .hov-city-body--groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0 32px;
+    align-items: start;
+}
+
+body .hov-city-body--groups > p,
+body .hov-city-body--groups > .hov-chip-list {
+    grid-column: 1 / -1;
+}
+
+body .hov-city-body--groups .hov-city-group > h3 {
+    margin: 10px 0 10px !important;
+    font-size: var(--hov-fs-h4) !important;
+    color: var(--hov-heading-color) !important;
+}
+
+body .hov-city-body--groups .hov-city-group > ul {
+    margin-bottom: 10px;
+}
+
+@media (min-width: 576px) and (max-width: 991.98px) {
+    body .hov-city-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-city-cards--2,
+    body .hov-city-body > .hov-city-list--2,
+    body .hov-city-body > .hov-city-list--defs {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body .hov-city-section {
+        padding-top: 34px;
+        padding-bottom: 34px;
+    }
+
+    body .hov-city-title {
+        margin-bottom: 14px !important;
+    }
+
+    body .hov-city-body > p {
+        margin-bottom: 14px;
+    }
+
+    body .hov-city-lead {
+        font-size: 16px !important;
+        line-height: 1.65 !important;
+    }
+
+    body .hov-city-cards {
+        gap: 12px;
+        margin: 4px 0 16px;
+    }
+
+    body .hov-city-card {
+        padding: 18px 18px;
+        border-radius: 12px;
+    }
+
+    body .hov-chip-list {
+        gap: 8px;
+        margin: 4px 0 14px;
+    }
+
+    body .hov-chip-list li {
+        padding: 8px 13px;
+        font-size: 13.5px;
+    }
+
+    body .hov-city-list li {
+        margin-bottom: 7px;
+    }
+
+    body .hov-city-body > .hov-city-list--defs {
+        gap: 8px;
+    }
+
+    body .hov-city-list--defs li {
+        padding: 12px 14px 12px 34px;
+    }
+
+    body .hov-city-list--defs li::before {
+        left: 15px;
+        top: 20px;
+    }
+
+    body .hov-city-body > h3 {
+        margin: 18px 0 8px !important;
+    }
+
+    body .hov-faq {
+        margin-top: -4px;
+    }
+
+    body .hov-faq-item {
+        margin-bottom: 10px;
+        border-radius: 12px;
+    }
+
+    body .hov-faq-item summary {
+        padding: 15px 46px 15px 16px;
+    }
+
+    body .hov-faq-item summary::after {
+        right: 18px;
+    }
+
+    body .hov-faq-answer {
+        padding: 0 16px 16px;
+    }
+
+    body .hov-city-cta {
+        padding: 40px 0;
+    }
+}
+
 
 /* ==========================================================================
    21. HEADER DROPDOWNS

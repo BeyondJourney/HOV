@@ -83,4 +83,46 @@
             d.documentElement.classList.toggle('hov-drawer-open', drawer.classList.contains('th-body-visible'));
         }).observe(drawer, { attributes: true, attributeFilter: ['class'] });
     }
+
+    /* ---- 5. footer link groups collapse on phones --------------------- */
+    /* Each "Services / Company / Legal" heading becomes a button that shows
+       or hides its list while the footer carries .hov-ft-acc (phones only,
+       see the CSS). The contact list is never collapsed. Without JS the
+       lists simply stay visible. */
+    var footer = d.querySelector('.hov-ft');
+    if (footer && 'matchMedia' in window) {
+        var n = 0;
+        Array.prototype.forEach.call(footer.querySelectorAll('.hov-ft-col > h3'), function (h) {
+            var list = h.nextElementSibling;
+            if (!list || list.tagName !== 'UL' || list.classList.contains('hov-ft-contact')) { return; }
+            var id = 'hov-ft-list-' + (++n);
+            list.id = id;
+            var btn = d.createElement('button');
+            btn.type = 'button';
+            btn.className = 'hov-ft-toggle';
+            btn.setAttribute('aria-controls', id);
+            btn.setAttribute('aria-expanded', 'false');
+            btn.textContent = h.textContent;
+            h.textContent = '';
+            h.appendChild(btn);
+            btn.addEventListener('click', function () {
+                if (!footer.classList.contains('hov-ft-acc')) { return; }
+                var open = !h.classList.contains('is-open');
+                h.classList.toggle('is-open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+        });
+        var mq = window.matchMedia('(max-width: 767.98px)');
+        var applyAcc = function () {
+            footer.classList.toggle('hov-ft-acc', mq.matches);
+            if (!mq.matches) {
+                Array.prototype.forEach.call(footer.querySelectorAll('.hov-ft-col > h3.is-open'), function (h) {
+                    h.classList.remove('is-open');
+                    h.firstElementChild.setAttribute('aria-expanded', 'false');
+                });
+            }
+        };
+        if (mq.addEventListener) { mq.addEventListener('change', applyAcc); } else if (mq.addListener) { mq.addListener(applyAcc); }
+        applyAcc();
+    }
 })();
