@@ -1,11 +1,12 @@
-﻿# ============================================================================
+# ============================================================================
 #  build-deploy.ps1 - assembles seo-migration/_deploy/public_html/
 #
 #  NON-DESTRUCTIVE. Reads your source HTML, never writes to it.
 #  Everything is produced into the staging folder.
 #
 #  Pipeline per page:
-#    1. Replace the Tourm mobile menu with the real 5-item menu
+#    1. (the mobile menu is authored in the source pages since the 2026-10
+#       redesign and is no longer rebuilt here)
 #    2. Rewrite every internal link to its final clean URL (no redirect hops)
 #    3. Convert document-relative asset paths to root-relative
 #    4. Inject title / meta description / canonical / Open Graph
@@ -157,74 +158,17 @@ $LinkMap = @{
     "home-countryside-hotel.html"       = "/"
 }
 
-# Clean menu markup that replaces the Tourm demo mobile menu
-$CleanMobileMenu = @'
-<ul>
-<li><a href="/">Home</a></li>
-<li><a href="/about-company/">About Us</a></li>
-<li class="menu-item-has-children"><a href="/our-services/">Our Services</a>
-<ul class="sub-menu">
-<li><a href="/mice-event/">MICE Events</a></li>
-<li><a href="/corporate-travel/">Corporate Travel</a></li>
-<li><a href="/incentive/">Incentive Travel</a></li>
-<li><a href="/conferences-event/">Conferences</a></li>
-<li><a href="/corporate-celebration/">Corporate Celebrations</a></li>
-<li><a href="/offsite-events/">Offsite Events</a></li>
-<li><a href="/destination-management/">Destination Management</a></li>
-</ul>
-</li>
-<li class="menu-item-has-children"><a href="/our-services/">Locations</a>
-<ul class="sub-menu">
-<li><a href="/mice-company-in-delhi/">Delhi</a></li>
-<li><a href="/mice-company-in-noida/">Noida</a></li>
-<li><a href="/mice-company-in-gurugram/">Gurugram</a></li>
-<li><a href="/corporate-travel-agency-in-mumbai/">Mumbai</a></li>
-<li><a href="/corporate-travel-agency-in-bangalore/">Bangalore</a></li>
-<li><a href="/corporate-event-planners-in-pune/">Pune</a></li>
-</ul>
-</li>
-<li><a href="/blog/">Blog</a></li>
-<li><a href="/contact-us/">Contact us</a></li>
-</ul>
-'@
-
-function Get-BlockRange {
-    <# Finds a <div class="X"> and returns the index range of its balanced close. #>
-    param([string]$Html, [string]$ClassName)
-    $open = [regex]::Match($Html, "<div[^>]*class=""[^""]*\b$ClassName\b[^""]*""[^>]*>")
-    if (-not $open.Success) { return $null }
-    $i = $open.Index + $open.Length
-    $depth = 1
-    while ($depth -gt 0 -and $i -lt $Html.Length) {
-        $next = [regex]::Match($Html.Substring($i), '(?i)<(/?)div\b')
-        if (-not $next.Success) { return $null }
-        $i += $next.Index + $next.Length
-        if ($next.Groups[1].Value -eq '/') { $depth-- } else { $depth++ }
-    }
-    return @{ Start = $open.Index; End = $i; InnerStart = $open.Index + $open.Length }
-}
-
-function Repair-MobileMenu {
-    param([string]$Html)
-    $r = Get-BlockRange -Html $Html -ClassName 'th-mobile-menu'
-    if ($null -eq $r) { return $Html }
-    $closeLen = 6   # "</div>"
-    $inner = $Html.Substring($r.InnerStart, ($r.End - $closeLen) - $r.InnerStart)
-    # Keep the logo block, replace only the menu <ul>
-    $ulStart = $inner.IndexOf('<ul')
-    if ($ulStart -lt 0) { return $Html }
-    $newInner = $inner.Substring(0, $ulStart) + $CleanMobileMenu
-    return $Html.Substring(0, $r.InnerStart) + $newInner + $Html.Substring($r.End - $closeLen)
-}
-
 function Repair-Links {
     param([string]$Html)
-    return [regex]::Replace($Html, '(?i)href="([^"]*\.html)((?:[?#][^"]*)?)"', {
+    # href= on links and action= on forms (the home page's "plan your
+    # programme" card hands off to the contact page via a GET form).
+    return [regex]::Replace($Html, '(?i)(href|action)="([^"]*\.html)((?:[?#][^"]*)?)"', {
         param($m)
-        $raw  = $m.Groups[1].Value
-        $frag = $m.Groups[2].Value
+        $attr = $m.Groups[1].Value
+        $raw  = $m.Groups[2].Value
+        $frag = $m.Groups[3].Value
         $leaf = ([System.Net.WebUtility]::UrlDecode(($raw -split '/')[-1])).ToLower()
-        if ($LinkMap.ContainsKey($leaf)) { return "href=""$($LinkMap[$leaf])$frag""" }
+        if ($LinkMap.ContainsKey($leaf)) { return "$attr=""$($LinkMap[$leaf])$frag""" }
         return $m.Value
     })
 }
@@ -233,6 +177,12 @@ function Convert-AssetPaths {
     param([string]$Html)
     $Html = $Html -replace '(?i)(=")(?:H/)?assets/', '${1}/assets/'
     $Html = $Html -replace "(?i)(=')(?:H/)?assets/", '${1}/assets/'
+    # srcset holds several comma-separated URLs; every one of them is rewritten
+    $Html = [regex]::Replace($Html, '(?i)(srcset=")([^"]*)(")', {
+        param($m)
+        $list = [regex]::Replace($m.Groups[2].Value, '(?i)(^|,\s*)(?:H/)?assets/', '${1}/assets/')
+        $m.Groups[1].Value + $list + $m.Groups[3].Value
+    })
     $Html = $Html -replace '(?i)url\(\s*(?:H/)?assets/',  'url(/assets/'
     $Html = $Html -replace '(?i)url\(\s*"(?:H/)?assets/', 'url("/assets/'
     $Html = $Html -replace "(?i)url\(\s*'(?:H/)?assets/", "url('/assets/"
@@ -272,6 +222,13 @@ function Convert-ToRelative {
         $v = $prefix + $m.Groups[2].Value
         if ($v -eq "") { $v = "./" }     # href="/" at depth 0 must not become href=""
         $m.Groups[1].Value + $v + '"'
+    })
+
+    # srcset: each root-relative candidate URL in the list
+    $Html = [regex]::Replace($Html, '(?i)(srcset=")([^"]*)(")', {
+        param($m)
+        $list = [regex]::Replace($m.Groups[2].Value, '(^|,\s*)/(?!/)', { param($u) $u.Groups[1].Value + $prefix })
+        $m.Groups[1].Value + $list + $m.Groups[3].Value
     })
 
     # url() in inline styles. Split into quoted and unquoted forms on purpose:
@@ -314,7 +271,9 @@ foreach ($src in $PageMap.Keys) {
     if (-not (Test-Path $path)) { Write-Host "  SKIP (missing): $src" -ForegroundColor Yellow; continue }
 
     $html = Read-Text $path
-    $html = Repair-MobileMenu   $html
+    # The mobile drawer is authored in the source pages now (it carries the
+    # active-page state), so it is no longer rebuilt here; Repair-Links still
+    # rewrites its hrefs to clean URLs like everything else.
     $html = Repair-Links        $html
     $html = Convert-AssetPaths  $html
     $html = Repair-Headings     $html   # exactly one H1 per page

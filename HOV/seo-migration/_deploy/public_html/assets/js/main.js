@@ -1755,7 +1755,7 @@
     // Keep the hamburger's aria-expanded in step with the drawer, and let Esc
     // close the drawer and the quick-contact panel.
     var $menuWrap = $('.th-menu-wrapper');
-    var $menuBtn = $('.th-menu-toggle.d-block');
+    var $menuBtn = $('.hov-header .th-menu-toggle, .th-menu-toggle.d-block');
     function syncMenuState() {
         $menuBtn.attr('aria-expanded', $menuWrap.hasClass('th-body-visible') ? 'true' : 'false');
     }

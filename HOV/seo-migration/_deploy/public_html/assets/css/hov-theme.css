@@ -1,0 +1,3628 @@
+/* ==========================================================================
+   House of Vacation — design system
+   --------------------------------------------------------------------------
+   Loaded after style.css and site-fixes.css. This file owns the brand layer:
+   tokens, header, mobile drawer, page banner, buttons, section rhythm, cards,
+   the home page components, the footer and the mobile-compact layouts.
+
+   Selector convention: `body .x` so a rule here outranks the per-page
+   <style> blocks that still live inside <body> (same trick as site-fixes.css).
+   ========================================================================== */
+
+:root {
+    /* Brand palette — navy from the HOV wordmark, teal from the compass mark */
+    --hov-navy: #0A2342;
+    --hov-navy-deep: #071A33;
+    --hov-navy-soft: #163A66;
+    --hov-teal: #0BB5B8;
+    --hov-teal-dark: #089396;
+    --hov-teal-soft: #E3F7F7;
+    --hov-sky: #1ABBEC;
+    --hov-gold: #F3B23E;
+    --hov-ink: #102033;
+    --hov-body: #4B5563;
+    --hov-muted: #6B7280;
+    --hov-line: #E3E9F2;
+    --hov-bg-soft: #F5F8FC;
+    --hov-bg-mist: #EEF4F9;
+
+    --hov-display-font: "Playfair Display", Georgia, "Times New Roman", serif;
+
+    --hov-radius-lg: 24px;
+    --hov-radius: 18px;
+    --hov-radius-sm: 12px;
+    --hov-pill: 999px;
+
+    --hov-shadow-sm: 0 8px 20px -12px rgba(10, 35, 66, .28);
+    --hov-shadow: 0 22px 46px -28px rgba(10, 35, 66, .45);
+    --hov-shadow-lg: 0 36px 70px -36px rgba(10, 35, 66, .55);
+
+    --hov-header-h: 78px;
+    --hov-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (max-width: 1199.98px) {
+    :root {
+        --hov-header-h: 64px;
+    }
+}
+
+
+/* ==========================================================================
+   1. BASE
+   ========================================================================== */
+
+/* `clip` instead of `hidden`: it stops sideways scrolling without turning
+   <html>/<body> into scroll containers, which is what let position: sticky
+   work on the header. Browsers without `clip` keep the `hidden` from
+   site-fixes.css and simply lose the sticky header. */
+html,
+body {
+    overflow-x: clip;
+}
+
+body {
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+body h1,
+body h2,
+body .h1,
+body .h2 {
+    font-family: var(--hov-display-font);
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+body h3,
+body h4,
+body h5,
+body h6 {
+    font-weight: 600;
+}
+
+body a {
+    transition: color .25s ease;
+}
+
+body ::selection {
+    background: var(--hov-teal);
+    color: #fff;
+}
+
+body .hov-visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ==========================================================================
+   2. BUTTONS
+   --------------------------------------------------------------------------
+   One component, five fills. The template's .th-btn wipe (:before) and
+   arrow (:after mask) are kept; only size, weight and colours change.
+   ========================================================================== */
+
+body .th-btn {
+    min-height: 50px;
+    padding: 13px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    line-height: 1.3;
+    border-radius: var(--hov-pill);
+    text-transform: none;
+    gap: 10px;
+}
+
+body .th-btn.th-icon:after {
+    width: 18px;
+    height: 18px;
+    mask-size: 18px;
+    -webkit-mask-size: 18px;
+}
+
+body .th-btn:hover.th-icon:after,
+body .th-btn:focus-visible.th-icon:after {
+    transform: translateX(3px);
+}
+
+/* Primary — brand teal, wipes to navy */
+body .th-btn.hov-btn-primary {
+    background-color: var(--hov-teal);
+    color: #fff;
+    border: 0;
+    box-shadow: 0 12px 26px -14px rgba(11, 181, 184, .9);
+}
+
+body .th-btn.hov-btn-primary:before {
+    background-color: var(--hov-navy);
+}
+
+/* Navy — wipes to teal */
+body .th-btn.hov-btn-navy,
+body .th-btn.style3 {
+    background-color: var(--hov-navy);
+    color: #fff;
+    border: 0;
+}
+
+body .th-btn.hov-btn-navy:before,
+body .th-btn.style3:before {
+    background-color: var(--hov-teal);
+}
+
+/* Ghost — for use on photography */
+body .th-btn.hov-btn-ghost,
+body .th-btn.style2 {
+    background-color: rgba(255, 255, 255, .08);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, .7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+body .th-btn.hov-btn-ghost:before,
+body .th-btn.style2:before {
+    background-color: #fff;
+}
+
+body .th-btn.hov-btn-ghost:hover,
+body .th-btn.style2:hover {
+    color: var(--hov-navy);
+    border-color: #fff;
+}
+
+body .th-btn.hov-btn-ghost:hover.th-icon:after,
+body .th-btn.style2:hover.th-icon:after {
+    background-color: var(--hov-navy);
+}
+
+/* Light — white on navy panels */
+body .th-btn.hov-btn-light {
+    background-color: #fff;
+    color: var(--hov-navy);
+    border: 0;
+}
+
+body .th-btn.hov-btn-light:before {
+    background-color: var(--hov-teal);
+}
+
+body .th-btn.hov-btn-light.th-icon:after {
+    background-color: var(--hov-navy);
+}
+
+body .th-btn.hov-btn-light:hover {
+    color: #fff;
+}
+
+body .th-btn.hov-btn-light:hover.th-icon:after {
+    background-color: #fff;
+}
+
+/* Outline — navy on white */
+body .th-btn.hov-btn-outline {
+    background-color: transparent;
+    color: var(--hov-navy);
+    border: 1.5px solid rgba(10, 35, 66, .25);
+}
+
+body .th-btn.hov-btn-outline:before {
+    background-color: var(--hov-navy);
+}
+
+body .th-btn.hov-btn-outline.th-icon:after {
+    background-color: var(--hov-navy);
+}
+
+body .th-btn.hov-btn-outline:hover {
+    color: #fff;
+    border-color: var(--hov-navy);
+}
+
+body .th-btn.hov-btn-outline:hover.th-icon:after {
+    background-color: #fff;
+}
+
+body .th-btn.hov-btn-sm {
+    min-height: 42px;
+    padding: 9px 20px;
+    font-size: 14px;
+}
+
+/* Inline text link with arrow */
+body .hov-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--hov-navy);
+    text-decoration: none;
+}
+
+body .hov-link i {
+    font-size: 13px;
+    color: var(--hov-teal);
+    transition: transform .25s var(--hov-ease);
+}
+
+body .hov-link:hover {
+    color: var(--hov-teal);
+}
+
+body .hov-link:hover i {
+    transform: translateX(4px);
+}
+
+
+/* ==========================================================================
+   3. HEADER
+   --------------------------------------------------------------------------
+   One header for every page. It is sticky in normal flow (white) and, on the
+   home page, fixed over the hero (transparent until the visitor scrolls, when
+   hov-theme.js adds .is-scrolled).
+   ========================================================================== */
+
+body .hov-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    border-bottom: 1px solid var(--hov-line);
+    transition: background-color .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+
+body .hov-header.is-scrolled {
+    box-shadow: 0 10px 30px -18px rgba(10, 35, 66, .35);
+}
+
+/* Neutralise the template's scroll-triggered fixed header; the <header>
+   itself handles stickiness now, so there is nothing to animate. */
+body .hov-header .sticky-wrapper,
+body .hov-header .sticky-wrapper.sticky {
+    position: static !important;
+    animation: none !important;
+    filter: none !important;
+    background: transparent !important;
+}
+
+body .hov-header .menu-area {
+    position: static;
+    padding: 0;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body .hov-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: var(--hov-header-h);
+}
+
+body .hov-logo {
+    display: block;
+    flex: 0 0 auto;
+    line-height: 0;
+}
+
+body .hov-logo img {
+    display: block;
+    height: 44px;
+    width: auto;
+}
+
+body .hov-logo .hov-logo-light {
+    display: none;
+}
+
+/* ---- desktop nav ------------------------------------------------------- */
+body .hov-header .main-menu {
+    padding: 0;
+    margin: 0 auto;
+}
+
+body .hov-header .main-menu > ul > li {
+    margin: 0 14px;
+}
+
+body .hov-header .main-menu > ul > li > a {
+    padding: 27px 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--hov-navy);
+    text-transform: none;
+}
+
+body .hov-header .main-menu > ul > li > a:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    height: 2px;
+    width: auto;
+    margin: 0;
+    border-radius: 2px;
+    background: var(--hov-teal);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .3s var(--hov-ease);
+}
+
+body .hov-header .main-menu > ul > li > a:hover,
+body .hov-header .main-menu > ul > li > a.active {
+    color: var(--hov-teal);
+}
+
+body .hov-header .main-menu > ul > li > a:hover:before,
+body .hov-header .main-menu > ul > li > a.active:before {
+    transform: scaleX(1);
+}
+
+body .hov-header .main-menu > ul > li.menu-item-has-children > a::after {
+    color: currentColor !important;
+    opacity: .8;
+}
+
+body .hov-header .main-menu ul.sub-menu {
+    top: calc(100% - 10px);
+    border-radius: 14px;
+    padding: 8px 0;
+}
+
+body .hov-header .main-menu ul.sub-menu li a {
+    font-weight: 500;
+    color: var(--hov-ink);
+}
+
+body .hov-header .main-menu ul.sub-menu li a.active {
+    color: var(--hov-teal);
+    background: var(--hov-teal-soft);
+}
+
+/* ---- right-hand actions ----------------------------------------------- */
+body .hov-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+body .hov-header-actions .th-btn {
+    min-height: 46px;
+    padding: 11px 22px;
+    font-size: 14px;
+}
+
+body .hov-header-call {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color .25s ease, color .25s ease;
+}
+
+body .hov-header-call:hover {
+    background: var(--hov-teal);
+    color: #fff;
+}
+
+body .hov-header .th-menu-toggle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(10, 35, 66, .18);
+    background: #fff;
+    color: var(--hov-navy);
+    font-size: 18px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+body .hov-header .th-menu-toggle:hover {
+    background: var(--hov-navy);
+    border-color: var(--hov-navy);
+    color: #fff;
+}
+
+@media (max-width: 1199.98px) {
+    body .hov-header .main-menu,
+    body .hov-header-actions .th-btn {
+        display: none;
+    }
+
+    body .hov-header-call,
+    body .hov-header .th-menu-toggle {
+        display: inline-flex;
+    }
+
+    body .hov-logo img {
+        height: 38px;
+    }
+}
+
+/* ---- overlay variant (home) -------------------------------------------- */
+body .hov-header--overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: transparent;
+    border-bottom-color: rgba(255, 255, 255, .12);
+}
+
+body .hov-header--overlay:not(.is-scrolled) .hov-logo-dark {
+    display: none;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .hov-logo-light {
+    display: block;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .main-menu > ul > li > a {
+    color: #fff;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .main-menu > ul > li > a:hover,
+body .hov-header--overlay:not(.is-scrolled) .main-menu > ul > li > a.active {
+    color: #fff;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .main-menu > ul > li > a:before {
+    background: #fff;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .th-menu-toggle {
+    background: rgba(255, 255, 255, .12);
+    border-color: rgba(255, 255, 255, .4);
+    color: #fff;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .hov-header-call {
+    background: rgba(255, 255, 255, .14);
+    color: #fff;
+}
+
+body .hov-header--overlay:not(.is-scrolled) .th-btn.hov-btn-primary {
+    box-shadow: none;
+}
+
+body .hov-header--overlay.is-scrolled {
+    background: #fff;
+    border-bottom-color: var(--hov-line);
+}
+
+
+/* ==========================================================================
+   4. MOBILE DRAWER
+   --------------------------------------------------------------------------
+   The template's .th-menu-wrapper, restyled: slides in from the right, holds
+   the full menu with accordion sub-menus (main.js) and ends with the CTA.
+   ========================================================================== */
+
+body .th-menu-wrapper {
+    background-color: rgba(7, 26, 51, .55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    transition: opacity .35s ease, visibility .35s ease;
+}
+
+body .th-menu-wrapper .th-menu-area {
+    left: auto;
+    right: -110%;
+    margin-left: auto;
+    max-width: min(86vw, 360px);
+    border-right: 0;
+    border-left: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 0;
+    box-shadow: -20px 0 50px -20px rgba(7, 26, 51, .5);
+    transition: right .45s var(--hov-ease), opacity .3s ease, visibility .3s ease;
+}
+
+body .th-menu-wrapper.th-body-visible .th-menu-area {
+    left: auto;
+    right: 0;
+}
+
+body .th-menu-wrapper .mobile-logo {
+    padding: 18px 20px;
+    background: #fff;
+    border-bottom: 1px solid var(--hov-line);
+    text-align: left;
+}
+
+body .th-menu-wrapper .mobile-logo img {
+    height: 36px;
+    width: auto;
+}
+
+body .th-menu-wrapper .th-menu-toggle {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    background: var(--hov-bg-mist);
+    color: var(--hov-navy);
+    font-size: 16px;
+}
+
+body .th-mobile-menu {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    max-height: none;
+    margin: 0;
+    padding: 8px 0 16px;
+}
+
+body .th-mobile-menu > ul {
+    padding: 0 20px;
+}
+
+body .th-mobile-menu ul li {
+    border-bottom: 1px solid var(--hov-line);
+}
+
+body .th-mobile-menu ul li a {
+    padding: 13px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--hov-navy);
+    text-transform: none;
+}
+
+body .th-mobile-menu ul li a.active {
+    color: var(--hov-teal);
+}
+
+body .th-mobile-menu ul li.th-active > a {
+    color: var(--hov-teal);
+}
+
+body .th-mobile-menu ul .menu-item-has-children > a:after {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 11px;
+    background: var(--hov-bg-mist);
+    color: var(--hov-navy);
+    margin-top: 0;
+}
+
+body .th-mobile-menu ul.sub-menu {
+    margin: 0 0 8px;
+    padding: 0 0 0 14px;
+    border-left: 2px solid var(--hov-teal-soft);
+}
+
+body .th-mobile-menu ul.sub-menu li {
+    border-bottom: 0;
+}
+
+body .th-mobile-menu ul.sub-menu li a {
+    padding: 9px 0;
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--hov-body);
+}
+
+body .th-mobile-menu ul li li:first-child {
+    border-top: 0;
+}
+
+body .hov-drawer-foot {
+    padding: 16px 20px 22px;
+    border-top: 1px solid var(--hov-line);
+    background: var(--hov-bg-soft);
+    display: grid;
+    gap: 12px;
+}
+
+body .hov-drawer-foot .th-btn {
+    width: 100%;
+}
+
+body .hov-drawer-call {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--hov-navy);
+    text-decoration: none;
+}
+
+body .hov-drawer-call i {
+    color: var(--hov-teal);
+}
+
+
+/* ==========================================================================
+   5. PAGE BANNER
+   ========================================================================== */
+
+body .breadcumb-wrapper {
+    background-color: var(--hov-navy);
+}
+
+body .breadcumb-wrapper::before {
+    background: linear-gradient(180deg,
+            rgba(7, 26, 51, .45) 0%,
+            rgba(7, 26, 51, .62) 55%,
+            rgba(7, 26, 51, .78) 100%) !important;
+}
+
+body .breadcumb-content {
+    max-width: 820px !important;
+}
+
+body .breadcumb-title {
+    font-family: var(--hov-display-font) !important;
+    letter-spacing: -.01em;
+    margin-bottom: 14px !important;
+}
+
+body .banner-subtitle {
+    font-size: 17px !important;
+    line-height: 1.7 !important;
+    max-width: 640px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .35);
+}
+
+body .breadcumb-menu {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 10px;
+    margin: 18px auto 0 !important;
+    padding: 7px 16px;
+    border-radius: var(--hov-pill);
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .18);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    list-style: none;
+}
+
+body .breadcumb-menu li,
+body .breadcumb-menu a,
+body .breadcumb-menu span {
+    font-size: 13px !important;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+body .breadcumb-menu li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, .92) !important;
+}
+
+body .breadcumb-menu li + li::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid rgba(255, 255, 255, .6);
+    border-top: 1.5px solid rgba(255, 255, 255, .6);
+    transform: rotate(45deg);
+}
+
+body .breadcumb-menu a:hover {
+    color: #9fe8ea !important;
+}
+
+
+/* ==========================================================================
+   6. SECTION RHYTHM + HEADINGS
+   ========================================================================== */
+
+body .hov-section {
+    padding: var(--hov-section-space) 0;
+    position: relative;
+}
+
+body .hov-section--soft {
+    background: var(--hov-bg-soft);
+}
+
+body .hov-section--navy {
+    background: var(--hov-navy);
+    color: #fff;
+}
+
+body .hov-section-head {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+}
+
+body .hov-section-head--left {
+    margin-left: 0;
+    text-align: left;
+}
+
+/* Centred head that may use the whole container: for the two long section
+   titles ("Services We Offer as a Corporate MICE Travel Agency", "Curated
+   Corporate Travel & Event Services") the 760px cap forced the heading onto
+   two lines and the intro onto four. Measured at 1280-1366px the heading now
+   sits on one line and the intro on two; it wraps naturally below that. */
+body .hov-section-head--wide {
+    max-width: none;
+    margin-bottom: 34px;
+}
+
+body .hov-section-head--wide .hov-title {
+    margin-bottom: 12px;
+}
+
+/* one class more specific than `body .hov-section-head .hov-lead` below,
+   which caps the intro at 680px for the ordinary heads */
+body .hov-section-head.hov-section-head--wide .hov-lead {
+    max-width: none;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+@media (max-width: 991.98px) {
+    body .hov-section-head--wide {
+        margin-bottom: 26px;
+    }
+
+    body .hov-section-head.hov-section-head--wide .hov-lead {
+        font-size: 15.5px;
+        line-height: 1.7;
+    }
+}
+
+body .hov-section-head--split {
+    max-width: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    text-align: left;
+}
+
+body .hov-section-head--split > div {
+    max-width: 720px;
+}
+
+/* a single centred call-to-action under a card grid */
+body .hov-section-cta {
+    margin-top: 32px;
+    text-align: center;
+}
+
+@media (max-width: 991.98px) {
+    body .hov-section-cta {
+        margin-top: 18px;
+    }
+}
+
+body .hov-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--hov-teal);
+    margin: 0 0 10px;
+}
+
+body .hov-eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+}
+
+body .hov-eyebrow--light {
+    color: #8fe6e8;
+}
+
+body .hov-title {
+    font-family: var(--hov-display-font);
+    font-size: clamp(27px, 3.3vw, 42px);
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -.012em;
+    color: var(--hov-navy);
+    margin: 0 0 14px;
+    text-wrap: balance;
+}
+
+body .hov-section--navy .hov-title {
+    color: #fff;
+}
+
+body .hov-lead {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+body .hov-section--navy .hov-lead {
+    color: rgba(255, 255, 255, .82);
+}
+
+body .hov-section-head .hov-lead {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body .hov-section-head--left .hov-lead,
+body .hov-section-head--split .hov-lead {
+    margin-left: 0;
+}
+
+
+/* ==========================================================================
+   7. GRIDS + MOBILE SCROLLER
+   --------------------------------------------------------------------------
+   .hov-grid lays cards out in columns on desktop. Add .hov-scroller and the
+   same element becomes a horizontal, snap-scrolling strip below 992px, so a
+   phone shows one card at a time instead of a long vertical stack.
+   ========================================================================== */
+
+body .hov-grid {
+    display: grid;
+    gap: 24px;
+}
+
+body .hov-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body .hov-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body .hov-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+body .hov-grid--5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+@media (max-width: 1199.98px) {
+    body .hov-grid--4,
+    body .hov-grid--5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-grid--3,
+    body .hov-grid--4,
+    body .hov-grid--5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    body .hov-scroller {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: var(--hov-gutter);
+        padding: 4px var(--hov-gutter) 14px;
+        margin: 0 calc(-1 * var(--hov-gutter));
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .hov-scroller::-webkit-scrollbar {
+        display: none;
+    }
+
+    body .hov-scroller > * {
+        flex: 0 0 min(78%, 330px);
+        scroll-snap-align: start;
+        min-width: 0;
+    }
+
+    body .hov-scroller--wide > * {
+        flex-basis: min(86%, 380px);
+    }
+
+    body .hov-scroller--narrow > * {
+        flex-basis: min(64%, 260px);
+    }
+}
+
+@media (max-width: 575.98px) {
+    body .hov-grid--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Small "swipe" hint, phones only */
+body .hov-swipe-hint {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin: -6px 0 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--hov-muted);
+}
+
+body .hov-swipe-hint i {
+    color: var(--hov-teal);
+    animation: hovNudge 1.6s ease-in-out infinite;
+}
+
+@keyframes hovNudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-swipe-hint {
+        display: inline-flex;
+    }
+}
+
+
+/* ==========================================================================
+   8. CARDS
+   ========================================================================== */
+
+/* ---- 8a. Service / category card — photo with caption on it ------------ */
+body .hov-scard {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--hov-radius);
+    background: var(--hov-navy);
+    color: #fff;
+    aspect-ratio: 4 / 3;
+    min-height: 240px;
+    box-shadow: var(--hov-shadow-sm);
+    text-decoration: none;
+    transition: transform .45s var(--hov-ease), box-shadow .45s var(--hov-ease);
+    isolation: isolate;
+}
+
+body .hov-scard img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .9s var(--hov-ease);
+}
+
+body .hov-scard::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10, 35, 66, 0) 30%, rgba(10, 35, 66, .55) 62%, rgba(10, 35, 66, .92) 100%);
+    z-index: 1;
+}
+
+body .hov-scard-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 22px 22px 20px;
+}
+
+body .hov-scard-tag {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #9fe8ea;
+    margin-bottom: 6px;
+}
+
+body .hov-scard h3 {
+    font-size: 20px;
+    line-height: 1.3;
+    color: #fff;
+    margin: 0 0 6px;
+}
+
+body .hov-scard p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, .84);
+    margin: 0;
+}
+
+body .hov-scard-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(255, 255, 255, .28);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 14px;
+    transition: background-color .3s ease, transform .3s var(--hov-ease);
+}
+
+body .hov-scard:hover,
+body .hov-scard:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-scard:hover img {
+    transform: scale(1.06);
+}
+
+body .hov-scard:hover .hov-scard-arrow {
+    background: var(--hov-teal);
+    border-color: var(--hov-teal);
+    transform: rotate(-45deg);
+}
+
+/* ---- 8b. White content card with image on top ------------------------- */
+body .hov-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    border-radius: var(--hov-radius);
+    overflow: hidden;
+    box-shadow: var(--hov-shadow-sm);
+    transition: transform .4s var(--hov-ease), box-shadow .4s var(--hov-ease), border-color .4s ease;
+}
+
+body .hov-card:hover {
+    transform: translateY(-5px);
+    border-color: #cfe0ee;
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-card-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--hov-bg-mist);
+}
+
+body .hov-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .8s var(--hov-ease);
+}
+
+body .hov-card:hover .hov-card-media img {
+    transform: scale(1.05);
+}
+
+body .hov-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 20px 22px 22px;
+}
+
+body .hov-card-body h3 {
+    font-size: 18px;
+    line-height: 1.35;
+    color: var(--hov-navy);
+    margin: 0 0 8px;
+}
+
+body .hov-card-body p {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+body .hov-card-body .hov-link {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: 14px;
+}
+
+body .hov-card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    border-radius: var(--hov-pill);
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+body .hov-card-tag i {
+    font-size: 11px;
+}
+
+/* ---- 8c. Icon feature card --------------------------------------------- */
+body .hov-icard {
+    height: 100%;
+    padding: 24px 22px;
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    border-radius: var(--hov-radius);
+    transition: transform .35s var(--hov-ease), box-shadow .35s ease, border-color .35s ease;
+}
+
+body .hov-icard:hover {
+    transform: translateY(-4px);
+    border-color: #cfe0ee;
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-icard-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+body .hov-icard h3,
+body .hov-icard h4 {
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--hov-navy);
+    margin: 0 0 8px;
+}
+
+body .hov-icard p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+/* ---- 8d. Check list ----------------------------------------------------- */
+body .hov-checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px 20px;
+}
+
+body .hov-checks--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body .hov-checks li {
+    position: relative;
+    padding-left: 30px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--hov-ink);
+}
+
+body .hov-checks li::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Pro", "Font Awesome 5 Pro", "Font Awesome 6 Free", "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+}
+
+@media (max-width: 575.98px) {
+    body .hov-checks--2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   9. HOME — HERO
+   ========================================================================== */
+
+body .hov-hero {
+    position: relative;
+    background: var(--hov-navy-deep);
+    color: #fff;
+    isolation: isolate;
+}
+
+body .hov-hero .hov-hero-slider,
+body .hov-hero .swiper-wrapper,
+body .hov-hero .swiper-slide {
+    min-height: clamp(560px, 78vh, 740px);
+}
+
+body .hov-hero .swiper-slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* The template transitions `all` on fade slides, which also animates the
+       stacking transform Swiper applies at start-up: for 0.6s the other
+       slides slid in from the right over the first one. Only opacity
+       should ever animate here. */
+    transition-property: opacity;
+}
+
+/* Before the slider script runs (and while it initialises) only the first
+   slide is visible; Swiper's inline opacity takes over from there. */
+body .hov-hero .swiper-slide:not(:first-child):not(.swiper-slide-active) {
+    opacity: 0;
+}
+
+body .hov-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scale(1.04);
+    transition: transform 7s linear;
+}
+
+body .hov-hero .swiper-slide-active .hov-hero-bg {
+    transform: scale(1.12);
+}
+
+body .hov-hero-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(7, 26, 51, .86) 0%, rgba(7, 26, 51, .62) 45%, rgba(7, 26, 51, .28) 100%),
+        linear-gradient(180deg, rgba(7, 26, 51, .35) 0%, rgba(7, 26, 51, 0) 40%, rgba(7, 26, 51, .55) 100%);
+}
+
+body .hov-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 40px;
+    align-items: center;
+    padding-top: calc(var(--hov-header-h) + 40px);
+    padding-bottom: 96px;
+}
+
+body .hov-hero-copy {
+    max-width: 640px;
+}
+
+body .hov-hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px 7px 10px;
+    border-radius: var(--hov-pill);
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .22);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 18px;
+}
+
+body .hov-hero-eyebrow i {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal);
+    font-size: 10px;
+}
+
+body .hov-hero-title {
+    font-family: var(--hov-display-font);
+    font-size: clamp(34px, 4.8vw, 62px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.015em;
+    color: #fff;
+    margin: 0 0 18px;
+    text-wrap: balance;
+}
+
+body .hov-hero-title em {
+    font-style: italic;
+    color: #9fe8ea;
+}
+
+body .hov-hero-text {
+    font-size: clamp(15.5px, 1.2vw, 18px);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, .86);
+    max-width: 540px;
+    margin: 0 0 28px;
+}
+
+body .hov-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* staggered entrance for the active slide only; everything is visible by
+   default, so a slider that never initialises still shows its copy */
+body .hov-hero .swiper-slide-active .hov-hero-copy > * {
+    animation: hovRise .75s var(--hov-ease) both;
+}
+
+body .hov-hero .swiper-slide-active .hov-hero-copy > :nth-child(2) { animation-delay: .1s; }
+body .hov-hero .swiper-slide-active .hov-hero-copy > :nth-child(3) { animation-delay: .2s; }
+body .hov-hero .swiper-slide-active .hov-hero-copy > :nth-child(4) { animation-delay: .3s; }
+
+@keyframes hovRise {
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* pagination bars */
+/* !important: Swiper's own stylesheet pins .swiper-pagination-bullets to
+   bottom: 10px with a two-class selector, which would land the bars on top
+   of the trust strip. */
+body .hov-hero-pagination {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    bottom: 74px !important; /* clear of the 56px trust strip */
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+body .hov-hero-pagination .swiper-pagination-bullet {
+    pointer-events: auto;
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .4);
+    opacity: 1;
+    margin: 0;
+    transition: width .3s ease, background-color .3s ease;
+}
+
+body .hov-hero-pagination .swiper-pagination-bullet-active {
+    width: 48px;
+    background: var(--hov-teal);
+}
+
+/* trust strip pinned to the bottom edge of the hero */
+body .hov-hero-trust {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(7, 26, 51, .35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+body .hov-hero-trust ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 36px;
+    min-height: 56px;
+    align-items: center;
+}
+
+body .hov-hero-trust li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .9);
+}
+
+body .hov-hero-trust li i {
+    color: #9fe8ea;
+    font-size: 14px;
+}
+
+body .hov-hero-trust li strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ---- the "plan your programme" card ----------------------------------- */
+body .hov-plan {
+    position: relative;
+    z-index: 3;
+    background: #fff;
+    color: var(--hov-ink);
+    border-radius: var(--hov-radius-lg);
+    padding: 26px 26px 24px;
+    box-shadow: var(--hov-shadow-lg);
+}
+
+body .hov-plan h2 {
+    font-family: var(--hov-display-font);
+    font-size: 23px;
+    line-height: 1.25;
+    color: var(--hov-navy);
+    margin: 0 0 6px;
+}
+
+body .hov-plan > p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--hov-muted);
+    margin: 0 0 18px;
+}
+
+body .hov-plan-form {
+    display: grid;
+    gap: 12px;
+}
+
+body .hov-plan-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--hov-muted);
+    margin: 0 0 6px;
+}
+
+body .hov-plan-field .hov-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    border: 1.5px solid var(--hov-line);
+    border-radius: 12px;
+    background: #fff;
+    font-family: var(--body-font);
+    font-size: 15px;
+    color: var(--hov-ink);
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+body .hov-plan-field select.hov-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230A2342' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+}
+
+body .hov-plan-field .hov-input:focus {
+    outline: none;
+    border-color: var(--hov-teal);
+    box-shadow: 0 0 0 4px rgba(11, 181, 184, .16);
+}
+
+body .hov-plan-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+}
+
+body .hov-plan .th-btn {
+    width: 100%;
+    margin-top: 4px;
+}
+
+body .hov-plan-note {
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    color: var(--hov-muted);
+    text-align: center;
+}
+
+body .hov-plan-note a {
+    color: var(--hov-navy);
+    font-weight: 600;
+}
+
+@media (max-width: 1199.98px) {
+    body .hov-hero-inner {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 28px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-hero .hov-hero-slider,
+    body .hov-hero .swiper-wrapper,
+    body .hov-hero .swiper-slide {
+        min-height: 520px;
+    }
+
+    body .hov-hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+        padding-top: calc(var(--hov-header-h) + 34px);
+        padding-bottom: 70px;
+    }
+
+    body .hov-hero-bg::after {
+        background:
+            linear-gradient(180deg, rgba(7, 26, 51, .55) 0%, rgba(7, 26, 51, .35) 40%, rgba(7, 26, 51, .82) 100%);
+    }
+
+    body .hov-hero-trust {
+        display: none;
+    }
+
+    body .hov-hero-pagination {
+        bottom: 22px !important;
+        justify-content: flex-start;
+        padding: 0 var(--hov-gutter);
+    }
+
+    /* the plan card drops below the slider and tucks into its bottom edge */
+    body .hov-plan-wrap {
+        position: relative;
+        z-index: 4;
+        margin-top: -44px;
+        padding-bottom: 8px;
+    }
+
+    body .hov-plan {
+        padding: 22px 20px 20px;
+    }
+
+    body .hov-plan h2 {
+        font-size: 21px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    body .hov-hero .hov-hero-slider,
+    body .hov-hero .swiper-wrapper,
+    body .hov-hero .swiper-slide {
+        min-height: 480px;
+    }
+
+    body .hov-hero-inner {
+        padding-top: calc(var(--hov-header-h) + 28px);
+        padding-bottom: 72px;
+    }
+
+    body .hov-hero-title {
+        font-size: clamp(30px, 9vw, 38px);
+    }
+
+    body .hov-hero-text {
+        font-size: 15px;
+        margin-bottom: 22px;
+    }
+
+    body .hov-hero-actions .th-btn {
+        flex: 1 1 calc(50% - 6px);
+        min-height: 46px;
+        padding: 11px 16px;
+        font-size: 14px;
+    }
+
+    body .hov-plan-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 359.98px) {
+    body .hov-plan-row {
+        grid-template-columns: 1fr;
+    }
+
+    body .hov-hero-actions .th-btn {
+        flex-basis: 100%;
+    }
+}
+
+/* Desktop: the card floats over the right-hand side of the hero, aligned to
+   the same container edge as the copy. */
+@media (min-width: 992px) {
+    body .hov-plan-wrap {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-top: calc(var(--hov-header-h) + 40px);
+        padding-bottom: 96px;
+        pointer-events: none;
+    }
+
+    body .hov-plan {
+        width: 380px;
+        pointer-events: auto;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    body .hov-plan {
+        width: 340px;
+    }
+}
+
+
+/* ==========================================================================
+   10. HOME — INTRO + STATS
+   ========================================================================== */
+
+body .hov-intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: 60px;
+    align-items: center;
+}
+
+body .hov-intro-media {
+    position: relative;
+}
+
+body .hov-intro-media > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--hov-radius-lg);
+    box-shadow: var(--hov-shadow);
+    display: block;
+}
+
+body .hov-intro-badge {
+    position: absolute;
+    left: -18px;
+    bottom: 34px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-intro-badge strong {
+    display: block;
+    font-family: var(--hov-display-font);
+    font-size: 30px;
+    line-height: 1;
+    color: var(--hov-navy);
+}
+
+body .hov-intro-badge span {
+    display: block;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--hov-muted);
+}
+
+body .hov-intro-badge i {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 18px;
+}
+
+body .hov-intro-copy .hov-lead b {
+    color: var(--hov-navy);
+    font-weight: 600;
+}
+
+body .hov-features {
+    list-style: none;
+    margin: 26px 0 28px;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+}
+
+body .hov-feature {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+body .hov-feature-icon {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 18px;
+}
+
+body .hov-feature h3 {
+    font-size: 17px;
+    color: var(--hov-navy);
+    margin: 0 0 4px;
+}
+
+body .hov-feature p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+body .hov-stats {
+    list-style: none;
+    margin: 52px 0 0;
+    padding: 28px 8px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    border-top: 1px solid var(--hov-line);
+    border-bottom: 1px solid var(--hov-line);
+}
+
+body .hov-stat {
+    text-align: center;
+    padding: 6px 10px;
+}
+
+body .hov-stat strong {
+    display: block;
+    font-family: var(--hov-display-font);
+    font-size: clamp(30px, 3.2vw, 44px);
+    line-height: 1.05;
+    color: var(--hov-navy);
+    letter-spacing: -.02em;
+}
+
+/* .counter-number is only a hook for the count-up script; it must not pick
+   up the template's own counter styling or break onto its own line. */
+body .hov-stat strong .counter-number,
+body .hov-stat strong small {
+    display: inline;
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+body .hov-stat strong small {
+    font-size: .6em;
+    color: var(--hov-teal);
+    margin-left: 2px;
+}
+
+body .hov-stat span {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--hov-muted);
+}
+
+@media (max-width: 991.98px) {
+    body .hov-intro-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    body .hov-intro-media > img {
+        aspect-ratio: 16 / 10;
+    }
+
+    body .hov-intro-badge {
+        left: 14px;
+        bottom: 14px;
+        padding: 12px 16px;
+    }
+
+    body .hov-intro-badge strong {
+        font-size: 24px;
+    }
+
+    body .hov-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 34px;
+        padding: 18px 0;
+        gap: 14px 10px;
+    }
+
+    body .hov-features {
+        margin: 20px 0 22px;
+    }
+}
+
+
+/* ==========================================================================
+   11. HOME — JOURNEYS (destination cards + lightbox galleries)
+   --------------------------------------------------------------------------
+   Each destination is one .tour-gallery (main.js binds the lightbox to it).
+   The cover is the visible card; the rest of the photographs stay in the
+   markup as hidden .gallery-item nodes, so the lightbox still walks the whole
+   set while the page shows a single card per destination.
+   ========================================================================== */
+
+body .hov-journey {
+    position: relative;
+}
+
+/* The photograph is shown untouched (no colour wash); the caption sits in
+   its own panel beneath it. Only the small photo-count pill overlays the
+   image. The card keeps the template's .gallery-item hook for the lightbox,
+   so the template's inline-block/padding defaults are reset here. */
+body .hov-journey-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    text-align: left;
+    border-radius: var(--hov-radius);
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    color: var(--hov-body);
+    cursor: pointer;
+    box-shadow: var(--hov-shadow-sm);
+    transition: transform .45s var(--hov-ease), box-shadow .45s var(--hov-ease), border-color .3s ease;
+}
+
+body .hov-journey-media {
+    position: relative;
+    flex: 0 0 auto;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--hov-bg-mist);
+}
+
+body .hov-journey-media > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform .9s var(--hov-ease);
+}
+
+body .hov-journey-body {
+    flex: 1 1 auto;
+    padding: 16px 18px 18px;
+}
+
+body .hov-journey-body h3 {
+    font-family: var(--hov-display-font);
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    color: var(--hov-navy);
+    margin: 0 0 6px;
+}
+
+body .hov-journey-body .hov-journey-event {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--hov-teal-dark);
+    margin-bottom: 6px;
+}
+
+body .hov-journey-body p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+body .hov-journey-count {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 11px;
+    border-radius: var(--hov-pill);
+    background: rgba(7, 26, 51, .6);
+    border: 1px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+body .hov-journey-count i {
+    font-size: 11px;
+}
+
+body .hov-journey-card:hover,
+body .hov-journey-card:focus-visible {
+    transform: translateY(-6px);
+    border-color: #cfe0ee;
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-journey-card:hover .hov-journey-media > img {
+    transform: scale(1.06);
+}
+
+body .hov-journey-hidden {
+    display: none !important;
+}
+
+@media (max-width: 991.98px) {
+    body .hov-journey-body {
+        padding: 14px 16px 16px;
+    }
+
+    body .hov-journey-body h3 {
+        font-size: 22px;
+    }
+}
+
+
+/* ==========================================================================
+   12. HOME — REACH (pan-India) + CLIENT LOGOS
+   ========================================================================== */
+
+/* The photo column stretches to the copy column, so the picture starts level
+   with the heading and ends level with the button instead of floating in the
+   middle. The four points sit two-up to keep that column compact. */
+body .hov-reach-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: stretch;
+}
+
+body .hov-reach-media {
+    display: flex;
+    min-height: 0;
+}
+
+/* The collage is 3:4 (1600x2120), the same shape as the copy column at
+   1280px and up, so `cover` trims at most a few pixels at the edges. */
+body .hov-reach-media img {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: var(--hov-radius-lg);
+    box-shadow: var(--hov-shadow);
+    display: block;
+}
+
+body .hov-reach-points {
+    list-style: none;
+    margin: 22px 0 24px;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+
+body .hov-reach-points--grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+body .hov-reach-points--grid li {
+    gap: 12px;
+    padding: 14px 14px 13px;
+}
+
+body .hov-reach-points--grid li i {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+}
+
+body .hov-reach-points--grid li strong {
+    font-size: 15px;
+}
+
+body .hov-reach-points--grid li span {
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+body .hov-reach-points li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--hov-line);
+}
+
+body .hov-reach-points li i {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 15px;
+}
+
+body .hov-reach-points li strong {
+    display: block;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--hov-navy);
+    margin-bottom: 2px;
+}
+
+body .hov-reach-points li span {
+    display: block;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--hov-body);
+}
+
+/* Small desktops (up to 1279px): the copy column grows past 850px here, which would turn a
+   stretched photo into a narrow strip. Keep the top edge aligned with the
+   heading and let the photo keep a 3:4 shape instead. */
+@media (min-width: 992px) and (max-width: 1279.98px) {
+    body .hov-reach-media {
+        align-self: start;
+    }
+
+    body .hov-reach-media img {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 3 / 4;
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-reach-grid {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    /* stacked: show the whole collage at its own 3:4 shape, nothing cropped */
+    body .hov-reach-media img {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: auto;
+    }
+
+    body .hov-reach-points {
+        margin: 18px 0 22px;
+        gap: 10px;
+    }
+
+    body .hov-reach-points li {
+        padding: 13px 14px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    body .hov-reach-points--grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* client logo strip
+   The logo files are trimmed to their artwork (assets/img/brand/trim/), so
+   each one is shown at up to its native width with no up-scaling. */
+body .hov-logos {
+    padding: 40px 0 44px;
+    border-top: 1px solid var(--hov-line);
+    background: linear-gradient(180deg, #fff 0%, var(--hov-bg-soft) 100%);
+}
+
+body .hov-logos-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 0 0 28px;
+    font-family: var(--body-font);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    color: var(--hov-navy);
+    text-align: center;
+}
+
+body .hov-logos-label::before,
+body .hov-logos-label::after {
+    content: "";
+    flex: 0 0 56px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(11, 181, 184, 0), var(--hov-teal));
+}
+
+body .hov-logos-label::after {
+    background: linear-gradient(90deg, var(--hov-teal), rgba(11, 181, 184, 0));
+}
+
+body .hov-logos-label span {
+    position: relative;
+    padding-bottom: 6px;
+}
+
+body .hov-logos-label span::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 28px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--hov-teal);
+    transform: translateX(-50%);
+}
+
+body .hov-logos .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* reset the template's 150px absolute box */
+body .hov-logos .brand-box {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 88px;
+    margin: 0;
+    padding: 0 6px;
+    overflow: visible;
+}
+
+body .hov-logos .brand-box img {
+    position: static;
+    width: auto;
+    height: auto;
+    max-height: 68px;
+    max-width: min(100%, 160px);
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: .78;
+    transition: filter .3s ease, opacity .3s ease, transform .3s ease;
+}
+
+body .hov-logos .brand-box:hover img {
+    filter: none;
+    opacity: 1;
+    transform: scale(1.04);
+}
+
+@media (max-width: 767.98px) {
+    body .hov-logos {
+        padding: 30px 0 32px;
+    }
+
+    body .hov-logos-label {
+        gap: 12px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        letter-spacing: .14em;
+    }
+
+    body .hov-logos-label::before,
+    body .hov-logos-label::after {
+        flex-basis: 34px;
+    }
+
+    body .hov-logos .brand-box {
+        height: 68px;
+    }
+
+    body .hov-logos .brand-box img {
+        max-height: 52px;
+        max-width: min(100%, 130px);
+    }
+}
+
+
+/* ==========================================================================
+   13. SERVICE PAGES (service-detail / hov-travel-service / hov-content)
+   ========================================================================== */
+
+body section.service-detail {
+    padding-top: 56px !important;
+    padding-bottom: 24px !important;
+}
+
+body .service-detail .service-heading {
+    max-width: 860px;
+    margin: 0 auto 40px !important;
+}
+
+body .service-detail .service-heading h2 {
+    font-family: var(--hov-display-font) !important;
+    font-size: clamp(26px, 3.2vw, 40px) !important;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+}
+
+body .service-detail .service-heading p {
+    font-size: 16.5px !important;
+    text-align: center !important;
+    color: var(--hov-body) !important;
+    margin: 0 auto 14px !important;
+}
+
+@media (max-width: 767.98px) {
+    body .service-detail .service-heading p {
+        text-align: left !important;
+    }
+
+    body .breadcumb-menu {
+        padding: 6px 12px;
+        gap: 4px 8px;
+    }
+
+    body .breadcumb-menu li,
+    body .breadcumb-menu a,
+    body .breadcumb-menu span {
+        font-size: 12.5px !important;
+    }
+}
+
+body .service-detail .service-content {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: 48px;
+    align-items: center;
+    padding: 36px 0 20px;
+    border-top: 1px solid var(--hov-line);
+}
+
+body .service-detail .content-left h3 {
+    font-family: var(--hov-display-font) !important;
+    font-size: clamp(22px, 2.3vw, 30px) !important;
+    letter-spacing: -.01em;
+}
+
+body .service-detail .content-left p {
+    font-size: 16px !important;
+}
+
+body .service-detail .content-right img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 8;
+    object-fit: cover;
+    border-radius: var(--hov-radius-lg);
+    box-shadow: var(--hov-shadow);
+    display: block;
+}
+
+body section.hov-travel-service,
+body section.hov-content {
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+}
+
+body section.hov-travel-service + section.hov-travel-service {
+    padding-top: 0 !important;
+}
+
+body .hov-travel-service h2,
+body .hov-block h2 {
+    font-family: var(--hov-display-font) !important;
+    font-size: clamp(23px, 2.4vw, 32px) !important;
+    letter-spacing: -.01em;
+    max-width: 30ch;
+    text-wrap: balance;
+}
+
+body .hov-travel-service p,
+body .hov-block p {
+    max-width: 78ch;
+}
+
+body .hov-travel-service h4,
+body .hov-block h4 {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--hov-teal-dark) !important;
+    margin: 22px 0 14px !important;
+}
+
+/* the two-column <ul> pairs become one check-list panel */
+body .service-list,
+body .hov-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 28px;
+    padding: 20px 22px;
+    border-radius: var(--hov-radius);
+    background: var(--hov-bg-soft);
+    border: 1px solid var(--hov-line);
+    max-width: 920px;
+}
+
+body .service-list ul,
+body .hov-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body .service-list li,
+body .hov-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 10px !important;
+    line-height: 1.6 !important;
+    color: var(--hov-ink) !important;
+}
+
+body .service-list li:last-child,
+body .hov-list li:last-child {
+    margin-bottom: 0 !important;
+}
+
+body .service-list li::before,
+body .hov-list li::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Pro", "Font Awesome 5 Pro", "Font Awesome 6 Free", "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+}
+
+/* blog index + legal pages reuse .hov-content/.hov-list as plain lists */
+body .hov-content .hov-block > .hov-list {
+    display: block;
+    list-style: none;
+    padding: 0;
+    background: none;
+    border: 0;
+    max-width: 78ch;
+}
+
+body .hov-block {
+    margin-bottom: 36px !important;
+}
+
+@media (max-width: 991.98px) {
+    body section.service-detail {
+        padding-top: 36px !important;
+    }
+
+    body .service-detail .service-heading {
+        margin-bottom: 24px !important;
+    }
+
+    body .service-detail .service-content {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding-top: 24px;
+    }
+
+    body .service-detail .content-right {
+        order: -1;
+    }
+
+    body .service-detail .content-right img {
+        aspect-ratio: 16 / 10;
+    }
+
+    body section.hov-travel-service,
+    body section.hov-content {
+        padding-top: 26px !important;
+        padding-bottom: 26px !important;
+    }
+
+    body .service-list,
+    body .hov-list {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 16px 16px;
+    }
+
+    body .hov-block {
+        margin-bottom: 26px !important;
+    }
+}
+
+
+/* ==========================================================================
+   14. ABOUT PAGE
+   ========================================================================== */
+
+body .hov-about-media {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+}
+
+body .hov-about-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--hov-radius);
+    box-shadow: var(--hov-shadow-sm);
+    display: block;
+}
+
+body .hov-about-media .hov-about-img1 {
+    grid-row: 1 / 3;
+    aspect-ratio: 4 / 5;
+}
+
+body .hov-about-media .hov-about-img2,
+body .hov-about-media .hov-about-img3 {
+    aspect-ratio: 4 / 3;
+}
+
+body .hov-about-media .hov-about-since {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--hov-navy);
+    color: #fff;
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-about-media .hov-about-since strong {
+    display: block;
+    font-family: var(--hov-display-font);
+    font-size: 22px;
+    line-height: 1;
+}
+
+body .hov-about-media .hov-about-since span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, .75);
+}
+
+/* destination-style cards for the "MICE Travel Events" grid */
+body .hov-dcard {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    border-radius: var(--hov-radius);
+    overflow: hidden;
+    box-shadow: var(--hov-shadow-sm);
+    transition: transform .4s var(--hov-ease), box-shadow .4s ease;
+}
+
+body .hov-dcard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-dcard img {
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    display: block;
+}
+
+body .hov-dcard-body {
+    padding: 18px 20px 20px;
+}
+
+body .hov-dcard-body h3 {
+    font-size: 18px;
+    line-height: 1.35;
+    color: var(--hov-navy);
+    margin: 0 0 8px;
+}
+
+body .hov-dcard-body h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+body .hov-dcard-body h3 a:hover {
+    color: var(--hov-teal);
+}
+
+body .hov-dcard-body p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--hov-body);
+    margin: 0;
+}
+
+/* team */
+body .hov-team-card {
+    text-align: center;
+}
+
+body .hov-team-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: var(--hov-radius);
+    box-shadow: var(--hov-shadow-sm);
+    display: block;
+    margin-bottom: 14px;
+    transition: transform .4s var(--hov-ease), box-shadow .4s ease;
+}
+
+body .hov-team-card:hover img {
+    transform: translateY(-4px);
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-team-card h3 {
+    font-size: 16.5px;
+    color: var(--hov-navy);
+    margin: 0 0 3px;
+}
+
+body .hov-team-card span {
+    display: block;
+    font-size: 13px;
+    color: var(--hov-muted);
+}
+
+/* testimonials (template .testi-card, tidied) */
+body .hov-testi .testiSlider1 .swiper-slide {
+    margin-top: 0 !important;
+}
+
+body .hov-testi .th-slider.has-shadow {
+    margin: 0;
+    padding: 0;
+}
+
+body .hov-testi .th-slider.has-shadow .swiper-wrapper {
+    padding: 10px 0 20px;
+}
+
+body .hov-testi .testi-card {
+    border-radius: var(--hov-radius);
+    border: 1px solid var(--hov-line);
+    box-shadow: var(--hov-shadow-sm);
+    padding: 30px 28px 34px;
+}
+
+body .hov-testi .testi-card_text {
+    font-size: 15.5px !important;
+    line-height: 1.75 !important;
+    color: var(--hov-body);
+}
+
+body .hov-testi .testi-card_review i {
+    color: var(--hov-gold);
+    font-size: 13px;
+}
+
+body .hov-testi .slider-pagination {
+    margin-top: 10px;
+}
+
+@media (max-width: 991.98px) {
+    body .hov-about-media {
+        gap: 10px;
+    }
+
+    body .hov-about-media .hov-about-img1 {
+        aspect-ratio: 4 / 4.4;
+    }
+
+    body .hov-about-media .hov-about-since {
+        right: 10px;
+        bottom: 10px;
+        padding: 10px 12px;
+    }
+
+    body .hov-testi .testi-card {
+        padding: 22px 20px 30px;
+    }
+}
+
+
+/* city pages: nine stacked sections on a phone, so each one breathes a
+   little less */
+@media (max-width: 767.98px) {
+    body .hov-city-section {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    body .hov-city-title {
+        margin-bottom: 16px !important;
+    }
+
+    body .hov-city-cards {
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    body .hov-city-card {
+        padding: 18px 18px;
+    }
+}
+
+/* global presence (about): the four stat tiles stay two-up on phones */
+@media (max-width: 479.98px) {
+    body .presence-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    body .presence-stat {
+        padding: 14px 14px;
+    }
+}
+
+body .presence-cta {
+    margin-top: 14px;
+}
+
+
+/* ==========================================================================
+   15. OUR SERVICES PAGE
+   ========================================================================== */
+
+body .hov-services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+}
+
+body .hov-services-grid .service-points {
+    list-style: none;
+    margin: 0 0 6px;
+    padding: 0;
+}
+
+body .hov-services-grid .service-points li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--hov-body);
+}
+
+body .hov-services-grid .service-points li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--hov-teal);
+}
+
+@media (max-width: 1199.98px) {
+    body .hov-services-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    body .hov-services-grid .hov-card-media {
+        aspect-ratio: 16 / 9;
+    }
+
+    body .hov-services-grid .hov-card-body {
+        padding: 14px 14px 16px;
+    }
+
+    body .hov-services-grid .hov-card-body h3 {
+        font-size: 15.5px;
+    }
+
+    body .hov-services-grid .hov-card-tag {
+        margin-bottom: 8px;
+        padding: 4px 10px;
+        font-size: 10.5px;
+    }
+
+    body .hov-services-grid .service-points li {
+        font-size: 13px;
+    }
+}
+
+/* Phones: ten cards as a compact list (photo left, copy right) rather than
+   ten tall stacked cards. Every title, point and link stays visible. */
+@media (max-width: 767.98px) {
+    body .hov-services-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    body .hov-services-grid .hov-card {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    body .hov-services-grid .hov-card-media {
+        flex: 0 0 116px;
+        aspect-ratio: auto;
+        min-height: 100%;
+    }
+
+    body .hov-services-grid .hov-card-media img {
+        height: 100%;
+    }
+
+    body .hov-services-grid .hov-card-body {
+        padding: 14px 14px 12px;
+        min-width: 0;
+    }
+
+    body .hov-services-grid .hov-card-body h3 {
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    body .hov-services-grid .service-points li {
+        font-size: 12.5px;
+        line-height: 1.45;
+        margin-bottom: 3px;
+        padding-left: 14px;
+    }
+
+    body .hov-services-grid .service-points li::before {
+        top: 7px;
+        width: 5px;
+        height: 5px;
+    }
+
+    body .hov-services-grid .hov-card-body .hov-link {
+        padding-top: 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 359.98px) {
+    body .hov-services-grid .hov-card-media {
+        flex-basis: 96px;
+    }
+}
+
+
+/* ==========================================================================
+   16. CONTACT PAGE
+   ========================================================================== */
+
+body .hov-contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px;
+    align-items: start;
+}
+
+body .hov-contact-cards {
+    display: grid;
+    gap: 12px;
+    margin: 26px 0 0;
+}
+
+body .hov-contact-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    box-shadow: var(--hov-shadow-sm);
+}
+
+body .hov-contact-card i {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: var(--hov-teal-soft);
+    color: var(--hov-teal-dark);
+    font-size: 17px;
+}
+
+body .hov-contact-card strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--hov-muted);
+    margin-bottom: 4px;
+}
+
+body .hov-contact-card p,
+body .hov-contact-card a {
+    display: block;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--hov-navy);
+    margin: 0;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+body .hov-contact-card a:hover {
+    color: var(--hov-teal);
+}
+
+body .hov-contact-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+body .hov-contact-social a {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hov-bg-mist);
+    color: var(--hov-navy);
+    font-size: 15px;
+    text-decoration: none;
+    transition: background-color .25s ease, color .25s ease, transform .25s ease;
+}
+
+body .hov-contact-social a:hover {
+    background: var(--hov-teal);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+body .hov-form-card {
+    padding: 32px;
+    border-radius: var(--hov-radius-lg);
+    background: #fff;
+    border: 1px solid var(--hov-line);
+    box-shadow: var(--hov-shadow);
+}
+
+body .hov-form-card h2 {
+    font-family: var(--hov-display-font);
+    font-size: 26px;
+    color: var(--hov-navy);
+    margin: 0 0 6px;
+}
+
+body .hov-form-card > p {
+    font-size: 14.5px;
+    color: var(--hov-muted);
+    margin: 0 0 22px;
+}
+
+body .hov-form-card form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+}
+
+body .hov-form-card .form-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+body .hov-form-card .form-group.message,
+body .hov-form-card .submit-btn,
+body .hov-form-card .form-messages {
+    grid-column: 1 / -1;
+}
+
+body .hov-form-card label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--hov-ink);
+    margin: 0 0 7px;
+}
+
+body .hov-form-card label span {
+    color: #d64545;
+}
+
+body .hov-form-card input,
+body .hov-form-card select,
+body .hov-form-card textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--hov-line);
+    border-radius: 12px;
+    background: #fff;
+    font-family: var(--body-font);
+    font-size: 15px;
+    color: var(--hov-ink);
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+body .hov-form-card textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+body .hov-form-card input:focus,
+body .hov-form-card select:focus,
+body .hov-form-card textarea:focus {
+    outline: none;
+    border-color: var(--hov-teal);
+    box-shadow: 0 0 0 4px rgba(11, 181, 184, .16);
+}
+
+body .hov-form-card select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230A2342' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+body .hov-form-card .submit-btn {
+    text-align: left;
+    margin-top: 4px;
+}
+
+body .hov-form-card .submit-btn button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 13px 32px;
+    border-radius: var(--hov-pill);
+    border: 0;
+    background: var(--hov-teal);
+    color: #fff;
+    font-family: var(--body-font);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 12px 26px -14px rgba(11, 181, 184, .9);
+    transition: background-color .25s ease, transform .2s ease, box-shadow .25s ease;
+}
+
+body .hov-form-card .submit-btn button:hover,
+body .hov-form-card .submit-btn button:focus-visible {
+    background: var(--hov-navy);
+    transform: translateY(-2px);
+}
+
+body .hov-form-card .form-messages {
+    margin: 0;
+}
+
+body .hov-map {
+    margin-top: 44px;
+    border-radius: var(--hov-radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hov-line);
+    box-shadow: var(--hov-shadow-sm);
+    background: var(--hov-bg-mist);
+}
+
+body .hov-map iframe {
+    display: block;
+    width: 100%;
+    height: 360px;
+    border: 0;
+}
+
+@media (max-width: 991.98px) {
+    body .hov-contact-grid {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    body .hov-form-card {
+        padding: 22px 18px 20px;
+    }
+
+    body .hov-form-card form {
+        gap: 12px 12px;
+    }
+
+    body .hov-form-card .submit-btn button {
+        width: 100%;
+    }
+
+    body .hov-map {
+        margin-top: 26px;
+    }
+
+    body .hov-map iframe {
+        height: 260px;
+    }
+
+    body .hov-contact-cards {
+        margin-top: 18px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    body .hov-form-card form {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   17. FOOTER
+   ========================================================================== */
+
+body .hov-ft {
+    background: var(--hov-navy-deep);
+    color: rgba(255, 255, 255, .78);
+    font-family: var(--body-font);
+    margin-top: 0;
+}
+
+/* CTA band */
+body .hov-ft-cta {
+    position: relative;
+    background: linear-gradient(120deg, var(--hov-navy) 0%, #0f3d6e 60%, #0b6f8f 100%);
+    overflow: hidden;
+}
+
+body .hov-ft-cta::before {
+    content: "";
+    position: absolute;
+    right: -120px;
+    top: -140px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(11, 181, 184, .35) 0%, rgba(11, 181, 184, 0) 70%);
+    pointer-events: none;
+}
+
+body .hov-ft-cta-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 46px 0;
+}
+
+body .hov-ft-cta-inner > div:first-child {
+    max-width: 640px;
+}
+
+body .hov-ft-cta h2 {
+    font-family: var(--hov-display-font);
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.2;
+    color: #fff;
+    margin: 0 0 10px;
+}
+
+body .hov-ft-cta p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, .8);
+    margin: 0;
+}
+
+body .hov-ft-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 22px;
+    flex: 0 0 auto;
+}
+
+body .hov-ft-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+body .hov-ft-call i {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .25);
+    font-size: 15px;
+}
+
+body .hov-ft-call:hover {
+    color: #9fe8ea;
+}
+
+/* main columns */
+body .hov-ft-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.25fr;
+    gap: 40px;
+    padding: 56px 0 44px;
+}
+
+body .hov-ft-brand img {
+    height: 48px;
+    width: auto;
+    display: block;
+    margin-bottom: 18px;
+}
+
+body .hov-ft-brand p {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, .72);
+    margin: 0 0 20px;
+    max-width: 340px;
+}
+
+body .hov-ft-social {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+body .hov-ft-social a {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background-color .25s ease, transform .25s ease, border-color .25s ease;
+}
+
+body .hov-ft-social a:hover,
+body .hov-ft-social a:focus-visible {
+    background: var(--hov-teal);
+    border-color: var(--hov-teal);
+    transform: translateY(-3px);
+}
+
+body .hov-ft-badges {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+body .hov-ft-badges span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: #fff;
+}
+
+body .hov-ft-badges img {
+    height: 44px;
+    width: auto;
+    display: block;
+}
+
+body .hov-ft h3 {
+    font-family: var(--body-font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 6px 0 18px;
+}
+
+body .hov-ft h3 + h3 {
+    margin-top: 26px;
+}
+
+body .hov-ft ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body .hov-ft ul li {
+    margin: 0 0 9px;
+}
+
+body .hov-ft ul li a {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, .74);
+    text-decoration: none;
+    transition: color .2s ease, padding-left .2s ease;
+}
+
+body .hov-ft ul li a:hover,
+body .hov-ft ul li a:focus-visible {
+    color: #9fe8ea;
+    padding-left: 4px;
+}
+
+body .hov-ft-contact li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+body .hov-ft-contact li i {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(11, 181, 184, .16);
+    color: #9fe8ea;
+    font-size: 13px;
+    margin-top: 1px;
+}
+
+body .hov-ft-contact li div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+body .hov-ft-contact li p,
+body .hov-ft-contact li a {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, .78);
+    margin: 0;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+body .hov-ft-contact li a:hover {
+    color: #9fe8ea;
+}
+
+/* bottom bar: the copyright line only, centred */
+body .hov-ft-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 0 22px;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, .6);
+    text-align: center;
+}
+
+body .hov-ft-bottom p {
+    margin: 0;
+}
+
+@media (max-width: 1199.98px) {
+    body .hov-ft-grid {
+        grid-template-columns: 1.4fr 1fr 1fr;
+    }
+
+    body .hov-ft-grid > .hov-ft-col:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .hov-ft-cta-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+        padding: 36px 0;
+    }
+
+    body .hov-ft-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 20px;
+        padding: 40px 0 28px;
+    }
+
+    body .hov-ft-brand {
+        grid-column: 1 / -1;
+    }
+
+    body .hov-ft-grid > .hov-ft-col:last-child {
+        grid-column: 1 / -1;
+    }
+
+    body .hov-ft-contact {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 16px;
+    }
+
+    body .hov-ft-contact li:first-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+@media (max-width: 575.98px) {
+    body .hov-ft-cta-inner {
+        padding: 30px 0;
+    }
+
+    body .hov-ft-cta-actions {
+        width: 100%;
+    }
+
+    body .hov-ft-cta-actions .th-btn {
+        width: 100%;
+    }
+
+    body .hov-ft-grid {
+        gap: 24px 14px;
+        padding: 32px 0 20px;
+    }
+
+    body .hov-ft ul li {
+        margin-bottom: 7px;
+    }
+
+    body .hov-ft ul li a {
+        font-size: 14px;
+    }
+
+    body .hov-ft-contact {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    body .hov-ft-brand p {
+        max-width: none;
+    }
+}
+
+
+/* ==========================================================================
+   18. TEMPLATE LEFTOVERS THAT NO LONGER BELONG ON THE PAGE
+   ========================================================================== */
+
+body .shape-mockup,
+body .preloader {
+    display: none !important;
+}
+
+body .scroll-top {
+    background: var(--hov-navy);
+    /* stacked above the WhatsApp button, same right edge */
+    bottom: 96px;
+}
+
+body .scroll-top:hover {
+    background: var(--hov-teal);
+}
+
+body .scroll-top svg path {
+    stroke: var(--hov-teal);
+}
+
+@media (max-width: 575.98px) {
+    body .scroll-top {
+        right: 16px;
+        bottom: 84px;
+    }
+}
+
+
+/* ==========================================================================
+   18b. WHATSAPP ENQUIRY BUTTON
+   --------------------------------------------------------------------------
+   Fixed to the bottom-right on every page. A pill with a label from tablet
+   up, a round icon button on phones. Sits below the header (z 1000), the
+   mobile drawer and the lightbox, so none of those are ever covered.
+   ========================================================================== */
+
+body .hov-whatsapp {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    padding: 0;
+    border-radius: 50%;
+    background: #25D366;
+    color: #fff;
+    line-height: 1;
+    text-decoration: none;
+    box-shadow: 0 14px 30px -12px rgba(37, 211, 102, .8), 0 6px 14px -6px rgba(7, 26, 51, .35);
+    transition: transform .25s var(--hov-ease), box-shadow .25s ease, background-color .25s ease;
+}
+
+body .hov-whatsapp i {
+    font-size: 30px;
+    line-height: 1;
+    display: block;
+}
+
+body .hov-whatsapp:hover,
+body .hov-whatsapp:focus-visible {
+    background: #1EBE5A;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 20px 36px -14px rgba(37, 211, 102, .9), 0 8px 18px -8px rgba(7, 26, 51, .4);
+}
+
+body .hov-whatsapp:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
+@media (max-width: 767.98px) {
+    body .hov-whatsapp {
+        right: 16px;
+        bottom: 16px;
+        width: 54px;
+        height: 54px;
+    }
+
+    body .hov-whatsapp i {
+        font-size: 28px;
+    }
+}
+
+@media print {
+    body .hov-whatsapp,
+    body .scroll-top {
+        display: none !important;
+    }
+}
+
+/* The template's lightbox: a dark, airy frame */
+body .mfp-bg {
+    background: #071a33;
+    opacity: .94;
+}
+
+body .mfp-figure figcaption .mfp-bottom-bar {
+    margin-top: -32px;
+}
+
+body .mfp-title,
+body .mfp-counter {
+    color: rgba(255, 255, 255, .85);
+    font-size: 13px;
+}
+
+
+/* ==========================================================================
+   19. REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    body .hov-hero-bg,
+    body .hov-hero .swiper-slide-active .hov-hero-bg {
+        transform: none;
+        transition: none;
+    }
+
+    body .hov-hero .swiper-slide-active .hov-hero-copy > * {
+        animation: none;
+    }
+
+    body .hov-swipe-hint i {
+        animation: none;
+    }
+}
