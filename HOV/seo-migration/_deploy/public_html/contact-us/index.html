@@ -126,6 +126,29 @@
 <body>
     <a href="#hov-main" class="hov-skip">Skip to content</a>
 
+    <!-- preloader: plays once per visit (hov-theme.css section 17b, hov-theme.js section 6); preview with ?hov-pl=hold -->
+    <div class="hov-preloader hov-pl--nomascot" id="hov-preloader" role="status" aria-live="polite" aria-label="Loading House of Vacation">
+        <div class="hov-pl-stage">
+            <svg class="hov-pl-path" viewBox="0 0 520 300" aria-hidden="true" focusable="false">
+                <circle class="hov-pl-ring" cx="260" cy="200" r="128"/>
+                <path class="hov-pl-arc" d="M30 230 C 140 40, 380 40, 490 230"/>
+                <circle class="hov-pl-dot" cx="30" cy="230" r="5"/>
+                <circle class="hov-pl-dot" cx="490" cy="230" r="5"/>
+                <g class="hov-pl-plane">
+                    <path d="M18 0 L7 -3 L-6 -11 L-10 -10 L-3 -2 L-11 -1 L-15 -5 L-18 -4 L-15 0 L-18 4 L-15 5 L-11 1 L-3 2 L-10 10 L-6 11 L7 3 Z"/>
+                    <animateMotion dur="4.6s" repeatCount="indefinite" rotate="auto" path="M30 230 C 140 40, 380 40, 490 230"/>
+                </g>
+            </svg>
+            <div class="hov-pl-figure">
+                <span class="hov-pl-shadow" aria-hidden="true"></span>
+                <img class="hov-pl-mark" src="../assets/img/Logo-white-HOV.png" alt="Logo White Hov - House of Vacation" width="200" height="60" aria-hidden="true">
+            </div>
+        </div>
+        <p class="hov-pl-caption">Preparing your journey<span class="hov-pl-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <div class="hov-pl-bar" aria-hidden="true"><i></i></div>
+    </div>
+    <script>try{var q=location.search;document.documentElement.classList.add((sessionStorage.getItem('hov-pl')&&!/hov-pl=(play|hold)/.test(q))?'hov-pl-skip':'hov-pl-active')}catch(e){document.documentElement.classList.add('hov-pl-active')}</script>
+
     <!--[if lte IE 9]>
     	<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a rel="noopener noreferrer" href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   	<![endif]-->
@@ -199,7 +222,7 @@
                 <div class="container">
                     <div class="hov-header-inner">
                         <a href="../" class="hov-logo" aria-label="House of Vacation - home">
-                            <img class="hov-logo-dark" src="../assets/img/Logo-HOV.png" alt="House of Vacation" width="200" height="60">
+                            <img loading="lazy" decoding="async" class="hov-logo-dark" src="../assets/img/Logo-HOV.png" alt="House of Vacation" width="200" height="60">
                             <img loading="lazy" decoding="async" class="hov-logo-light" src="../assets/img/Logo-white-HOV.png" alt="House of Vacation" width="200" height="60" aria-hidden="true">
                         </a>
                         <nav class="main-menu" aria-label="Primary">

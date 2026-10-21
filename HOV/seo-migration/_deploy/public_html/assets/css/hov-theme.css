@@ -3853,6 +3853,337 @@ body .hov-ft-toggle {
 
 
 /* ==========================================================================
+   17b. PRELOADER — the HOV mascot gets ready for the journey
+   --------------------------------------------------------------------------
+   Markup sits right after the skip link on every page (see the snippet in
+   seo-migration/one-off/add-preloader.ps1); hov-theme.js §6 hides it once
+   the page has loaded and remembers that in sessionStorage so it plays once
+   per visit, not on every internal click. Everything animates with
+   transform/opacity only.
+
+   The character is assets/img/mascot/hov-mascot.png (transparent PNG). If
+   that file is missing the <img> onerror adds .hov-pl--nomascot and the
+   brand mark takes the stage instead, so the preloader never breaks.
+   ========================================================================== */
+
+body .hov-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 24px;
+    background: radial-gradient(120% 90% at 50% 100%, #0f3d6e 0%, var(--hov-navy) 45%, var(--hov-navy-deep) 100%);
+    color: #fff;
+    overflow: hidden;
+}
+
+body .hov-preloader::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 70vmin;
+    height: 70vmin;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(11, 181, 184, .22) 0%, rgba(11, 181, 184, 0) 68%);
+    pointer-events: none;
+}
+
+html.hov-pl-skip .hov-preloader {
+    display: none;
+}
+
+html.hov-pl-active {
+    overflow: hidden;
+}
+
+/* ---- stage: flight path + character ------------------------------------ */
+body .hov-pl-stage {
+    position: relative;
+    width: min(92vw, 520px);
+    aspect-ratio: 520 / 300;
+}
+
+body .hov-pl-path {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+body .hov-pl-ring {
+    fill: none;
+    stroke: rgba(255, 255, 255, .14);
+    stroke-width: 1.5;
+    stroke-dasharray: 2 9;
+    stroke-linecap: round;
+    transform-origin: 260px 200px;
+    animation: hov-pl-spin 36s linear infinite;
+}
+
+body .hov-pl-arc {
+    fill: none;
+    stroke: rgba(255, 255, 255, .42);
+    stroke-width: 2;
+    stroke-dasharray: 6 10;
+    stroke-linecap: round;
+    animation: hov-pl-dash 1.1s linear infinite;
+}
+
+body .hov-pl-dot {
+    fill: var(--hov-teal);
+}
+
+body .hov-pl-plane path {
+    fill: #fff;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .35));
+}
+
+body .hov-pl-figure {
+    position: absolute;
+    left: 50%;
+    bottom: 6%;
+    display: grid;
+    justify-items: center;
+    transform: translateX(-50%);
+    animation: hov-pl-greet 5.2s ease-in-out 2s infinite;
+}
+
+body .hov-pl-mascot {
+    display: block;
+    height: min(44vh, 330px);
+    width: auto;
+    max-width: 72vw;
+    object-fit: contain;
+    transform-origin: 50% 100%;
+    filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .35));
+    animation:
+        hov-pl-enter .9s cubic-bezier(.2, .8, .2, 1) both,
+        hov-pl-march 1.1s ease-in-out .9s infinite;
+    will-change: transform;
+}
+
+body .hov-pl-shadow {
+    display: block;
+    width: 52%;
+    height: 14px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, .5), rgba(0, 0, 0, 0));
+    animation:
+        hov-pl-enter .9s cubic-bezier(.2, .8, .2, 1) both,
+        hov-pl-shadow 1.1s ease-in-out .9s infinite;
+}
+
+/* no mascot file yet: the brand mark takes the stage */
+body .hov-pl-mark {
+    display: none;
+}
+
+body .hov-pl--nomascot .hov-pl-mascot,
+body .hov-pl--nomascot .hov-pl-shadow {
+    display: none;
+}
+
+body .hov-pl--nomascot .hov-pl-figure {
+    bottom: 34%;
+    animation: none;
+}
+
+body .hov-pl--nomascot .hov-pl-mark {
+    display: block;
+    height: 54px;
+    width: auto;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .4));
+    animation:
+        hov-pl-enter .9s cubic-bezier(.2, .8, .2, 1) both,
+        hov-pl-float 2.8s ease-in-out .9s infinite;
+}
+
+/* ---- caption + progress ------------------------------------------------ */
+body .hov-pl-caption {
+    position: relative;
+    margin: 0;
+    font-family: var(--body-font);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .78);
+    animation: hov-pl-fade .6s ease .4s both;
+}
+
+body .hov-pl-dots i {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: 4px;
+    border-radius: 50%;
+    background: var(--hov-teal);
+    vertical-align: middle;
+    animation: hov-pl-blink 1.2s ease-in-out infinite;
+}
+
+body .hov-pl-dots i:nth-child(2) { animation-delay: .2s; }
+body .hov-pl-dots i:nth-child(3) { animation-delay: .4s; }
+
+body .hov-pl-bar {
+    position: relative;
+    width: min(60vw, 220px);
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .16);
+    overflow: hidden;
+    animation: hov-pl-fade .6s ease .5s both;
+}
+
+body .hov-pl-bar i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(11, 181, 184, 0), var(--hov-teal) 40%, #9fe8ea);
+    animation: hov-pl-bar 1.5s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+
+/* ---- exit: the character walks off, the curtain lifts ------------------- */
+body .hov-preloader.is-leaving .hov-pl-figure {
+    animation: hov-pl-exit .7s cubic-bezier(.6, 0, .4, 1) forwards;
+}
+
+body .hov-preloader.is-leaving .hov-pl-mascot,
+body .hov-preloader.is-leaving .hov-pl-shadow,
+body .hov-preloader.is-leaving .hov-pl-mark {
+    animation-play-state: paused;
+}
+
+body .hov-preloader.is-leaving .hov-pl-caption,
+body .hov-preloader.is-leaving .hov-pl-bar,
+body .hov-preloader.is-leaving .hov-pl-path {
+    transition: opacity .3s ease;
+    opacity: 0;
+}
+
+body .hov-preloader.is-leaving {
+    animation: hov-pl-curtain .75s cubic-bezier(.7, 0, .3, 1) .3s forwards;
+}
+
+body .hov-preloader.is-done {
+    display: none;
+}
+
+@keyframes hov-pl-enter {
+    from { opacity: 0; transform: translateY(22px) scale(.86); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hov-pl-march {
+    0%, 50%, 100% { transform: translateY(0) rotate(0); }
+    25% { transform: translateY(-7px) rotate(-1.6deg); }
+    75% { transform: translateY(-7px) rotate(1.6deg); }
+}
+
+@keyframes hov-pl-shadow {
+    0%, 50%, 100% { transform: scaleX(1); opacity: .95; }
+    25%, 75% { transform: scaleX(.84); opacity: .6; }
+}
+
+@keyframes hov-pl-greet {
+    0%, 78%, 100% { transform: translateX(-50%) rotate(0); }
+    84% { transform: translateX(-47%) rotate(3deg); }
+    91% { transform: translateX(-48%) rotate(-1.2deg); }
+}
+
+@keyframes hov-pl-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes hov-pl-dash {
+    to { stroke-dashoffset: -16; }
+}
+
+@keyframes hov-pl-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes hov-pl-blink {
+    0%, 80%, 100% { opacity: .25; transform: translateY(0); }
+    40% { opacity: 1; transform: translateY(-2px); }
+}
+
+@keyframes hov-pl-bar {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(260%); }
+}
+
+@keyframes hov-pl-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes hov-pl-exit {
+    0% { transform: translateX(-50%) rotate(0); opacity: 1; }
+    100% { transform: translate(42vw, -10%) rotate(4deg) scale(.92); opacity: 0; }
+}
+
+@keyframes hov-pl-curtain {
+    to { clip-path: inset(0 0 100% 0); opacity: 0; }
+}
+
+@media (max-width: 575.98px) {
+    body .hov-preloader {
+        gap: 14px;
+    }
+
+    body .hov-pl-mascot {
+        height: min(38vh, 250px);
+    }
+
+    body .hov-pl-caption {
+        font-size: 11.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body .hov-pl-ring,
+    body .hov-pl-arc,
+    body .hov-pl-figure,
+    body .hov-pl-mascot,
+    body .hov-pl-shadow,
+    body .hov-pl-mark,
+    body .hov-pl-dots i,
+    body .hov-pl-bar i,
+    body .hov-pl-caption,
+    body .hov-pl-bar {
+        animation: none;
+    }
+
+    body .hov-pl-plane {
+        display: none;
+    }
+
+    body .hov-preloader.is-leaving {
+        animation: none;
+        transition: opacity .3s ease;
+        opacity: 0;
+    }
+
+    body .hov-preloader.is-leaving .hov-pl-figure {
+        animation: none;
+    }
+}
+
+
+/* ==========================================================================
    18. TEMPLATE LEFTOVERS THAT NO LONGER BELONG ON THE PAGE
    ========================================================================== */
 
