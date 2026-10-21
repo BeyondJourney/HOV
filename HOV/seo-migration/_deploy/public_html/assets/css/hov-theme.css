@@ -3252,7 +3252,7 @@ body .hov-ft-grid {
     padding: 56px 0 44px;
 }
 
-body .hov-ft-brand img {
+body .hov-ft-brand > a img {
     height: 48px;
     width: auto;
     display: block;
@@ -3295,25 +3295,45 @@ body .hov-ft-social a:focus-visible {
     transform: translateY(-3px);
 }
 
+/* accreditation badges: compact white tiles that hug each logo. The image
+   files are trimmed to the artwork (no transparent margin), so the tile's
+   padding is the only space around the logo. No fixed height, no shadow. */
+body .hov-ft-brand .hov-ft-badges-label {
+    margin: 0 0 10px;
+    max-width: none;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .55);
+}
+
 body .hov-ft-badges {
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
 }
 
 body .hov-ft-badges span {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    padding: 8px 12px;
-    border-radius: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
     background: #fff;
+    line-height: 0;
 }
 
-body .hov-ft-badges img {
-    height: 44px;
+body .hov-ft-brand .hov-ft-badges img {
+    height: 40px;
     width: auto;
+    max-width: 140px;
+    object-fit: contain;
     display: block;
+    margin: 0;
 }
 
 body .hov-ft h3 {
