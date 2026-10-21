@@ -2010,10 +2010,18 @@ body .hov-journey-body h3 {
     margin: 0 0 6px;
 }
 
+/* The event label can run to two lines ("Reward & Recognition Celebration")
+   while its neighbours take one, which used to push those titles 22px lower
+   than the rest of the row. The label now owns a fixed two-line slot and
+   sits at the bottom of it, so every title starts at the same height and
+   the label always touches its title. */
 body .hov-journey-body .hov-journey-event {
-    display: block;
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(2 * 1.4em);
     font-size: 12px;
     font-weight: 700;
+    line-height: 1.4;
     letter-spacing: .08em;
     text-transform: uppercase;
     color: var(--hov-teal-dark);
