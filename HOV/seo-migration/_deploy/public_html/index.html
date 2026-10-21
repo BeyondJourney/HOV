@@ -119,24 +119,16 @@
     <a href="#hov-main" class="hov-skip">Skip to content</a>
 
     <!-- preloader: plays once per visit (hov-theme.css section 17b, hov-theme.js section 6); preview with ?hov-pl=hold -->
-    <div class="hov-preloader hov-pl--nomascot" id="hov-preloader" role="status" aria-live="polite" aria-label="Loading House of Vacation">
-        <div class="hov-pl-stage">
-            <svg class="hov-pl-path" viewBox="0 0 520 300" aria-hidden="true" focusable="false">
-                <circle class="hov-pl-ring" cx="260" cy="200" r="128"/>
-                <path class="hov-pl-arc" d="M30 230 C 140 40, 380 40, 490 230"/>
-                <circle class="hov-pl-dot" cx="30" cy="230" r="5"/>
-                <circle class="hov-pl-dot" cx="490" cy="230" r="5"/>
-                <g class="hov-pl-plane">
-                    <path d="M18 0 L7 -3 L-6 -11 L-10 -10 L-3 -2 L-11 -1 L-15 -5 L-18 -4 L-15 0 L-18 4 L-15 5 L-11 1 L-3 2 L-10 10 L-6 11 L7 3 Z"/>
-                    <animateMotion dur="4.6s" repeatCount="indefinite" rotate="auto" path="M30 230 C 140 40, 380 40, 490 230"/>
-                </g>
-            </svg>
-            <div class="hov-pl-figure">
-                <span class="hov-pl-shadow" aria-hidden="true"></span>
-                <img class="hov-pl-mark" src="assets/img/Logo-white-HOV.png" alt="Logo White Hov - House of Vacation" width="200" height="60" aria-hidden="true">
-            </div>
+    <div class="hov-preloader" id="hov-preloader" role="status" aria-live="polite" aria-label="Loading House of Vacation">
+        <div class="hov-pl-figure">
+            <picture>
+                <source type="image/webp" srcset="assets/img/mascot/hov-mascot-640.webp 640w, assets/img/mascot/hov-mascot-900.webp 900w, assets/img/mascot/hov-mascot.webp 1200w" sizes="(max-width: 575px) 88vw, 560px">
+                <img class="hov-pl-mascot" src="assets/img/mascot/hov-mascot.png" alt="Hov Mascot - House of Vacation" width="1200" height="872" decoding="async" fetchpriority="high" onerror="this.closest('.hov-preloader').classList.add('hov-pl--nomascot')">
+            </picture>
+            <span class="hov-pl-shadow" aria-hidden="true"></span>
+            <img class="hov-pl-mark" src="assets/img/favicons/source/hov-wordmark-512.png" alt="" width="512" height="512" aria-hidden="true" role="presentation">
         </div>
-        <p class="hov-pl-caption">Preparing your journey<span class="hov-pl-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <p class="hov-pl-caption">Your next adventure is loading<span class="hov-pl-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
         <div class="hov-pl-bar" aria-hidden="true"><i></i></div>
     </div>
     <script>try{var q=location.search;document.documentElement.classList.add((sessionStorage.getItem('hov-pl')&&!/hov-pl=(play|hold)/.test(q))?'hov-pl-skip':'hov-pl-active')}catch(e){document.documentElement.classList.add('hov-pl-active')}</script>
@@ -152,7 +144,7 @@
         <div class="th-menu-area text-center">
             <button type="button" class="th-menu-toggle" aria-label="Close menu"><i class="fal fa-times" aria-hidden="true"></i></button>
             <div class="mobile-logo">
-                <a href="./"><img src="assets/img/Logo-HOV.png" alt="House of Vacation" width="200" height="60"></a>
+                <a href="./"><img loading="lazy" decoding="async" src="assets/img/Logo-HOV.png" alt="House of Vacation" width="200" height="60"></a>
             </div>
             <div class="th-mobile-menu">
                 <ul>

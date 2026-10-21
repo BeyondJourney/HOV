@@ -130,15 +130,15 @@
     /* The inline script under the preloader markup already decided, before
        first paint, whether this visit shows it (html.hov-pl-active) or skips
        it (html.hov-pl-skip, set once sessionStorage says it has played).
-       Here: keep it up for at least minShow so the entrance and one march
-       cycle are seen, then on window.load play the exit and remove it. A
-       hung image or font must never trap the page, hence the 6s net. */
+       Here: keep it up for at least minShow so the entrance is seen, then
+       on window.load play the exit and remove it. A hung image or font must
+       never trap the page, hence the 5s net. */
     var pl = d.getElementById('hov-preloader');
     var root = d.documentElement;
     if (pl && root.classList.contains('hov-pl-active')) {
         var t0 = Date.now();
         var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var minShow = reduce ? 300 : 1700;
+        var minShow = reduce ? 250 : 900;   /* long enough for the entrance, no longer */
         var finished = false;
         var finish = function () {
             if (finished) { return; }
@@ -151,7 +151,7 @@
                 root.classList.remove('hov-pl-active');
                 root.classList.add('hov-loaded');
                 if (pl.parentNode) { pl.parentNode.removeChild(pl); }
-            }, reduce ? 350 : 1150);
+            }, reduce ? 320 : 620);
         };
         var onReady = function () {
             window.setTimeout(finish, Math.max(0, minShow - (Date.now() - t0)));
@@ -162,7 +162,7 @@
             pl.addEventListener('click', finish);
         } else {
             if (d.readyState === 'complete') { onReady(); } else { window.addEventListener('load', onReady); }
-            window.setTimeout(finish, 6000);
+            window.setTimeout(finish, 5000);
         }
         window.addEventListener('pageshow', function (e) { if (e.persisted) { finish(); } });
     } else if (pl) {

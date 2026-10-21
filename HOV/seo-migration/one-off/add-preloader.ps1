@@ -17,33 +17,39 @@ param(
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object Text.UTF8Encoding $false
 $anchor = '<a href="#hov-main" class="hov-skip">Skip to content</a>'
-$hasMascot = Test-Path (Join-Path $Root 'assets\img\mascot\hov-mascot.png')
+$mascotPng = Join-Path $Root 'assets\img\mascot\hov-mascot.png'
+$hasMascot = Test-Path $mascotPng
+$hasWebp = (Test-Path (Join-Path $Root 'assets\img\mascot\hov-mascot.webp')) -and (Test-Path (Join-Path $Root 'assets\img\mascot\hov-mascot-900.webp')) -and (Test-Path (Join-Path $Root 'assets\img\mascot\hov-mascot-640.webp'))
 
-$mascotImg = if ($hasMascot) {
-    '                <img class="hov-pl-mascot" src="assets/img/mascot/hov-mascot.png" alt="" width="420" height="560" decoding="async" fetchpriority="high" onerror="this.closest(''.hov-preloader'').classList.add(''hov-pl--nomascot'')">' + "`n"
-} else { '' }
+# real pixel size of the prepared PNG, for width/height on the <img>
+$imgW = 1200; $imgH = 870
+if ($hasMascot) {
+    Add-Type -AssemblyName System.Drawing
+    $probe = [System.Drawing.Image]::FromFile($mascotPng); $imgW = $probe.Width; $imgH = $probe.Height; $probe.Dispose()
+}
+
+$mascotBlock = ''
+if ($hasMascot) {
+    $img = '<img class="hov-pl-mascot" src="assets/img/mascot/hov-mascot.png" alt="" width="' + $imgW + '" height="' + $imgH + '" decoding="async" fetchpriority="high" onerror="this.closest(''.hov-preloader'').classList.add(''hov-pl--nomascot'')">'
+    if ($hasWebp) {
+        $mascotBlock = '            <picture>' + "`n" +
+                       '                <source type="image/webp" srcset="assets/img/mascot/hov-mascot-640.webp 640w, assets/img/mascot/hov-mascot-900.webp 900w, assets/img/mascot/hov-mascot.webp ' + $imgW + 'w" sizes="(max-width: 575px) 88vw, 560px">' + "`n" +
+                       '                ' + $img + "`n" +
+                       '            </picture>' + "`n"
+    } else {
+        $mascotBlock = '            ' + $img + "`n"
+    }
+}
 $rootClass = if ($hasMascot) { 'hov-preloader' } else { 'hov-preloader hov-pl--nomascot' }
 
 $snippet = @"
     <!-- preloader: plays once per visit (hov-theme.css section 17b, hov-theme.js section 6); preview with ?hov-pl=hold -->
     <div class="$rootClass" id="hov-preloader" role="status" aria-live="polite" aria-label="Loading House of Vacation">
-        <div class="hov-pl-stage">
-            <svg class="hov-pl-path" viewBox="0 0 520 300" aria-hidden="true" focusable="false">
-                <circle class="hov-pl-ring" cx="260" cy="200" r="128"/>
-                <path class="hov-pl-arc" d="M30 230 C 140 40, 380 40, 490 230"/>
-                <circle class="hov-pl-dot" cx="30" cy="230" r="5"/>
-                <circle class="hov-pl-dot" cx="490" cy="230" r="5"/>
-                <g class="hov-pl-plane">
-                    <path d="M18 0 L7 -3 L-6 -11 L-10 -10 L-3 -2 L-11 -1 L-15 -5 L-18 -4 L-15 0 L-18 4 L-15 5 L-11 1 L-3 2 L-10 10 L-6 11 L7 3 Z"/>
-                    <animateMotion dur="4.6s" repeatCount="indefinite" rotate="auto" path="M30 230 C 140 40, 380 40, 490 230"/>
-                </g>
-            </svg>
-            <div class="hov-pl-figure">
-$mascotImg                <span class="hov-pl-shadow" aria-hidden="true"></span>
-                <img class="hov-pl-mark" src="assets/img/Logo-white-HOV.png" alt="" width="200" height="60" aria-hidden="true">
-            </div>
+        <div class="hov-pl-figure">
+$mascotBlock            <span class="hov-pl-shadow" aria-hidden="true"></span>
+            <img class="hov-pl-mark" src="assets/img/favicons/source/hov-wordmark-512.png" alt="" width="512" height="512" aria-hidden="true">
         </div>
-        <p class="hov-pl-caption">Preparing your journey<span class="hov-pl-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <p class="hov-pl-caption">Your next adventure is loading<span class="hov-pl-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
         <div class="hov-pl-bar" aria-hidden="true"><i></i></div>
     </div>
     <script>try{var q=location.search;document.documentElement.classList.add((sessionStorage.getItem('hov-pl')&&!/hov-pl=(play|hold)/.test(q))?'hov-pl-skip':'hov-pl-active')}catch(e){document.documentElement.classList.add('hov-pl-active')}</script>
