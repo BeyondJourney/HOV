@@ -224,3 +224,9 @@ ErrorDocument 404 /404.html
 <FilesMatch "^\.(htaccess|htpasswd|env|git)">
   Require all denied
 </FilesMatch>
+
+# mail.php appends every enquiry (name, phone, email) to this file beside
+# itself. It must never be readable over HTTP.
+<Files "enquiry-log.txt">
+  Require all denied
+</Files>

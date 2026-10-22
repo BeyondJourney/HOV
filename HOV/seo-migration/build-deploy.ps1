@@ -177,6 +177,11 @@ function Convert-AssetPaths {
     param([string]$Html)
     $Html = $Html -replace '(?i)(=")(?:H/)?assets/', '${1}/assets/'
     $Html = $Html -replace "(?i)(=')(?:H/)?assets/", '${1}/assets/'
+    # The enquiry form posts to mail.php, which lives at the deploy root. The
+    # source page says action="mail.php" (right beside contact.html), but the
+    # built page sits in /contact-us/, where that resolves to a 404. Make it
+    # root-relative here so step 8 turns it into "../mail.php" at any depth.
+    $Html = $Html -replace '(?i)(action=["''])(?:\./)?mail\.php(["''])', '${1}/mail.php${2}'
     # srcset holds several comma-separated URLs; every one of them is rewritten
     $Html = [regex]::Replace($Html, '(?i)(srcset=")([^"]*)(")', {
         param($m)
@@ -364,6 +369,13 @@ if (Test-Path $fontDir) {
         [System.IO.File]::Delete($ft.FullName)
     }
 }
+#   * archives, source maps and READMEs that ride along inside assets/
+#     (assets/css.zip, style.css.map, the mascot folder's notes) - never
+#     requested by a page, only weight and clutter on the server
+foreach ($x in (Get-ChildItem (Join-Path $Deploy "assets") -Recurse -File -Include *.zip,*.map,README.txt,README.md -EA SilentlyContinue)) {
+    $purgedBytes += $x.Length; $purged++
+    [System.IO.File]::Delete($x.FullName)
+}
 $acFinal = (Get-ChildItem (Join-Path $Deploy "assets") -Recurse -File).Count
 $mbFinal = [math]::Round(((Get-ChildItem (Join-Path $Deploy "assets") -Recurse -File | Measure-Object Length -Sum).Sum/1MB),1)
 Write-Host ("  purged {0} dead-weight files (-{1} MB)" -f $purged, [math]::Round($purgedBytes/1MB,1)) -ForegroundColor Gray
@@ -450,15 +462,17 @@ Write-Host "  rewrote $portRefs references across $portPages pages" -ForegroundC
 
 # The 404 page is the one exception. ErrorDocument serves it at whatever depth
 # the bad URL happened to have (/a/b/c/ -> still /404.html), so there is no
-# fixed depth to compute a relative path from. Absolute URLs are the only form
-# that resolves correctly from every one of them.
+# fixed depth to compute a relative path from. Its links therefore stay
+# ROOT-relative ("/assets/...", "/contact-us/"): that resolves from every depth
+# on whichever host serves the build (prod.houseofvacation.com today,
+# houseofvacation.com after the DNS switch). They used to be made absolute to
+# $SiteUrl, which sent the staging host's 404 page to the old live domain for
+# its icons and links. Only a subfolder mount would need a prefix here.
 $e404 = Join-Path $Deploy "404.html"
 if (Test-Path $e404) {
     $h = Read-Text $e404
     $n = ([regex]::Matches($h, '(?i)(?:href|src)="/(?!/)')).Count
-    $h = [regex]::Replace($h, '(?i)(\s(?:href|src)=")/(?!/)', { param($m) $m.Groups[1].Value + $SiteUrl + "/" })
-    Write-Text $e404 $h
-    Write-Host "  /404.html: $n links made absolute (served at unpredictable depth)" -ForegroundColor Gray
+    Write-Host "  /404.html: $n links kept root-relative (served at unpredictable depth, any host)" -ForegroundColor Gray
 }
 
 Write-Host "`n=== EXCLUDED ===" -ForegroundColor Cyan
